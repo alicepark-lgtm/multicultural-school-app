@@ -1,0 +1,26 @@
+# 의존성
+node_modules/
+
+# 빌드 결과물
+dist/
+.vite/
+
+# 환경변수 (API 키 등 민감 정보)
+.env
+.env.local
+.env.*.local
+
+# 에디터 설정
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS 파일
+.DS_Store
+Thumbs.db
+
+# Claude Code 내부 파일 (선택)
+# .claude/

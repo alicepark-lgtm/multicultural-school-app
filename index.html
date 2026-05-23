@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>다문화 학생·학부모 정보 소식</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2563EB;--primary-dark:#1D4ED8;--primary-light:#EFF6FF;
+  --secondary:#10B981;--danger:#EF4444;--danger-light:#FEF2F2;
+  --bg:#F0F4FF;--card:#FFF;--text:#1E293B;--text-muted:#64748B;
+  --border:#E2E8F0;--radius:16px;--shadow:0 4px 24px rgba(37,99,235,.10);--shadow-sm:0 2px 8px rgba(0,0,0,.08)
+}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+/* PAGE 1 */
+.page1{min-height:100vh;background:linear-gradient(135deg,#1E3A8A 0%,#2563EB 50%,#7C3AED 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.page1-card{background:rgba(255,255,255,.96);border-radius:28px;padding:40px 36px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.page1-icon{font-size:52px;margin-bottom:12px;display:block;text-align:center}
+.page1-title{font-size:22px;font-weight:700;color:var(--primary-dark);line-height:1.4;margin-bottom:6px;text-align:center}
+.page1-subtitle{font-size:14px;color:var(--text-muted);text-align:center;margin-bottom:28px}
+.section-label{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+.lang-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:28px}
+.lang-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;transition:all .15s;font-family:inherit}
+.lang-btn:hover{border-color:var(--primary);background:var(--primary-light);transform:translateY(-1px)}
+.lang-btn.active{border-color:var(--primary);background:var(--primary-light);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.lang-flag{font-size:22px}.lang-name{font-size:11px;font-weight:600;color:var(--text)}
+.school-select{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;color:var(--text);background:white;cursor:pointer;transition:border-color .15s;margin-bottom:24px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748B' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px}
+.school-select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.start-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--primary),#7C3AED);color:white;border:none;border-radius:12px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .15s}
+.start-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,99,235,.35)}
+.start-btn:disabled{opacity:.5;cursor:not-allowed}
+/* SCHOOL SEARCH */
+.school-search-wrap{position:relative;margin-bottom:16px}
+.school-search-input{width:100%;padding:12px 42px 12px 16px;border:2px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;color:var(--text);background:white;transition:border-color .15s}
+.school-search-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.search-spin{position:absolute;right:14px;top:50%;transform:translateY(-50%)}
+.school-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:white;border:1.5px solid var(--border);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);max-height:220px;overflow-y:auto;z-index:100}
+.school-result-item{padding:10px 14px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:background .1s;border-bottom:1px solid #F1F5F9}
+.school-result-item:last-child{border-bottom:none}
+.school-result-item:hover{background:var(--primary-light)}
+.school-result-name{font-size:14px;font-weight:600;color:var(--text)}
+.school-result-meta{font-size:11px;color:var(--text-muted)}
+.school-selected{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--primary-light);border:2px solid var(--primary);border-radius:12px;margin-bottom:20px}
+.school-selected-name{flex:1;font-size:14px;font-weight:600;color:var(--primary-dark)}
+.school-clear-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;padding:0;line-height:1}
+.school-search-status{padding:12px 14px;text-align:center;font-size:13px;color:var(--text-muted)}
+.api-key-section{margin-bottom:16px}
+.api-key-toggle{font-size:12px;color:var(--text-muted);cursor:pointer;background:none;border:none;font-family:inherit;padding:0;text-decoration:underline;margin-bottom:8px}
+.api-key-row{display:flex;gap:6px;margin-top:6px}
+.api-key-input{flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text)}
+.api-key-input:focus{outline:none;border-color:var(--primary)}
+.api-key-save-btn{padding:8px 12px;background:var(--primary);color:white;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.neis-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:#E0F2FE;color:#0369A1;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:14px}
+.meal-source-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;margin-bottom:14px;flex-wrap:wrap}
+.meal-source-text{font-size:12px;color:#166534;flex:1}
+.meal-reload-btn{padding:4px 10px;background:#16A34A;color:white;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+.meal-reload-btn:disabled{opacity:.6;cursor:not-allowed}
+/* PAGE 2 */
+.page2{min-height:100vh;display:flex;flex-direction:column}
+.page2-header{background:linear-gradient(135deg,#1E3A8A,#2563EB);color:white;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 16px rgba(37,99,235,.3);gap:12px;flex-wrap:wrap}
+.header-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.header-school{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.back-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:white;padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit;white-space:nowrap;transition:background .15s}
+.back-btn:hover{background:rgba(255,255,255,.25)}
+.lang-switcher{display:flex;gap:4px;flex-wrap:wrap}
+.lang-chip{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:white;padding:4px 8px;border-radius:6px;font-size:12px;cursor:pointer;transition:background .15s;font-family:inherit}
+.lang-chip:hover{background:rgba(255,255,255,.3)}.lang-chip.active{background:rgba(255,255,255,.35);border-color:white;font-weight:700}
+.tab-bar{background:white;display:flex;border-bottom:2px solid var(--border);box-shadow:var(--shadow-sm)}
+.tab-btn{flex:1;padding:14px;border:none;background:transparent;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;color:var(--text-muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-btn:hover:not(.active){background:var(--primary-light);color:var(--primary)}
+.page2-content{flex:1;overflow-y:auto;padding:20px}
+/* NEWSLETTER */
+.newsletter-container{max-width:1100px;margin:0 auto}
+.upload-zone{border:2.5px dashed #93C5FD;border-radius:var(--radius);padding:48px 24px;text-align:center;background:var(--primary-light);cursor:pointer;transition:all .15s;margin-bottom:20px}
+.upload-zone:hover{border-color:var(--primary);background:#DBEAFE}
+.upload-icon{font-size:40px;margin-bottom:12px;display:block}
+.upload-title{font-size:16px;font-weight:600;color:var(--primary);margin-bottom:6px}
+.upload-desc{font-size:13px;color:var(--text-muted)}
+.sample-btn{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 16px;background:white;border:1.5px solid var(--primary);color:var(--primary);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.sample-btn:hover{background:var(--primary-light)}
+.newsletter-viewer{display:grid;grid-template-columns:1fr 1fr;gap:16px;min-height:600px}
+@media(max-width:768px){.newsletter-viewer{grid-template-columns:1fr}}
+.viewer-panel{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;display:flex;flex-direction:column}
+.viewer-panel-header{padding:12px 16px;background:var(--primary);color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.translate-btn{padding:6px 14px;background:white;color:var(--primary);border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.translate-btn:hover:not(:disabled){background:#EFF6FF}.translate-btn:disabled{opacity:.6;cursor:not-allowed}
+.translation-body{flex:1;padding:20px;overflow-y:auto;font-size:14px;line-height:1.8;color:var(--text);min-height:400px}
+.translation-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-muted);text-align:center;gap:12px;padding:24px;min-height:300px}
+/* MEAL */
+.meal-container{max-width:1000px;margin:0 auto}
+.allergen-filter-card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-sm);margin-bottom:20px}
+.allergen-filter-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.allergen-filter-desc{font-size:12px;color:var(--text-muted);margin-bottom:14px}
+.allergen-filter-actions{display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+.filter-action-btn{padding:5px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-weight:600;background:white;cursor:pointer;font-family:inherit;color:var(--text-muted);transition:all .15s}
+.filter-action-btn:hover{border-color:var(--primary);color:var(--primary)}
+.allergen-grid{display:flex;flex-wrap:wrap;gap:8px}
+.allergen-chip{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;border:2px solid var(--border);cursor:pointer;transition:all .15s;font-size:12px;font-weight:500;background:#F8FAFC;color:var(--text);font-family:inherit;user-select:none}
+.allergen-chip:hover{transform:translateY(-1px)}.allergen-chip.selected{font-weight:700}
+/* CALENDAR */
+.calendar-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:20px}
+.calendar-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:linear-gradient(135deg,#1E3A8A,#2563EB);color:white}
+.calendar-title{font-size:17px;font-weight:700}
+.cal-nav-btn{background:rgba(255,255,255,.2);border:none;color:white;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;transition:background .15s}
+.cal-nav-btn:hover{background:rgba(255,255,255,.35)}
+.calendar-day-header{display:grid;grid-template-columns:repeat(7,1fr);background:#F8FAFC;border-bottom:1px solid var(--border)}
+.cal-day-label{padding:8px;text-align:center;font-size:12px;font-weight:700;color:var(--text-muted)}
+.cal-day-label:first-child{color:#EF4444}.cal-day-label:last-child{color:#2563EB}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border)}
+.cal-cell{background:var(--card);min-height:88px;padding:6px;transition:background .1s;position:relative}
+.cal-cell:hover:not(.empty-cell){background:#F0F7FF}
+.cal-cell.empty-cell{background:#FAFAFA}.cal-cell.weekend-cell{background:#F9FAFB}.cal-cell.holiday-cell{background:#FFF5F5}
+.cal-cell.today-cell{background:#EFF6FF;box-shadow:inset 0 0 0 2px var(--primary)}
+.cal-cell.has-allergen{background:#FFF0F0}.cal-cell.has-allergen:hover{background:#FFE4E4}
+.cal-date{font-size:13px;font-weight:700;margin-bottom:3px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.sunday .cal-date{color:#EF4444}.saturday .cal-date{color:#2563EB}
+.today-cell .cal-date{background:var(--primary);color:white}
+.holiday-label{font-size:9px;color:#EF4444;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-menu-items{display:flex;flex-direction:column;gap:1px}
+.cal-menu-item{font-size:10px;padding:1px 4px;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text-muted)}
+.cal-menu-item.allergen-hit{background:#FEE2E2;color:#B91C1C;font-weight:600}
+.allergen-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;border-radius:50%;background:var(--danger)}
+/* TODAY MEAL */
+.today-meal-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:20px}
+.today-meal-header{padding:14px 20px;background:linear-gradient(135deg,#065F46,#10B981);color:white;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.today-meal-title{font-size:16px;font-weight:700}.today-date{font-size:12px;opacity:.85}
+.tray-container{padding:20px;background:#FFF8F0}
+.tray{background:linear-gradient(145deg,#D97706,#B45309);border-radius:20px;padding:16px;box-shadow:0 6px 24px rgba(180,83,9,.3),inset 0 1px 0 rgba(255,255,255,.15);position:relative}
+.tray::before{content:'';position:absolute;inset:8px;border:2px solid rgba(255,255,255,.1);border-radius:14px;pointer-events:none}
+.tray-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:600px){.tray-grid{grid-template-columns:repeat(2,1fr)}}
+.tray-item{background:white;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;transition:transform .15s,box-shadow .15s;position:relative;border:2px solid transparent}
+.tray-item:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.tray-item.allergen-alert{border-color:var(--danger);background:#FFF5F5}
+.tray-emoji{font-size:36px;text-align:center;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.1))}
+.tray-name{font-size:13px;font-weight:700;text-align:center;color:var(--text);line-height:1.3}
+.tray-desc{font-size:11px;color:var(--text-muted);text-align:center;line-height:1.4;flex:1}
+.tray-allergens{display:flex;flex-wrap:wrap;gap:3px;justify-content:center}
+.allergen-badge{font-size:9px;padding:2px 5px;border-radius:4px;font-weight:600}
+.allergen-badge.warn{background:#FEE2E2;color:#991B1B}.allergen-badge.info{background:#F1F5F9;color:var(--text-muted)}
+.allergen-warning-banner{display:flex;align-items:center;gap:4px;padding:4px 8px;background:var(--danger);color:white;border-radius:6px;font-size:9px;font-weight:700;margin-top:4px}
+.spinner{width:18px;height:18px;border:2.5px solid #93C5FD;border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.legend-box{margin-top:14px;background:white;border-radius:12px;padding:12px 16px}
+.legend-title{font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:8px}
+.legend-chips{display:flex;flex-wrap:wrap;gap:6px}
+.legend-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:12px}
+</style>
+</head>
+<body>
+<div id="root"><div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#64748B">⏳ 로딩 중...</div></div>
+<script type="module">
+import{h,render,Fragment}from'https://esm.sh/preact@10.23.2';
+import{useState,useRef,useEffect}from'https://esm.sh/preact@10.23.2/hooks';
+import htm from'https://esm.sh/htm@3.1.1';
+const html=htm.bind(h);
+
+// ── DATA ────────────────────────────────────────────────────────────────
+const LANGUAGES=[
+  {code:'ko',flag:'🇰🇷',nativeName:'한국어'},
+  {code:'en',flag:'🇺🇸',nativeName:'English'},
+  {code:'zh',flag:'🇨🇳',nativeName:'中文'},
+  {code:'vi',flag:'🇻🇳',nativeName:'Tiếng Việt'},
+  {code:'fil',flag:'🇵🇭',nativeName:'Filipino'},
+  {code:'mn',flag:'🇲🇳',nativeName:'Монгол'},
+  {code:'ru',flag:'🇷🇺',nativeName:'Русский'},
+  {code:'ja',flag:'🇯🇵',nativeName:'日本語'},
+];
+
+// ── NEIS API ──────────────────────────────────────────────────────────
+const NEIS='https://open.neis.go.kr/hub';
+
+async function neisSearchSchools(query,key=''){
+  if(!query||query.trim().length<2)return{rows:[],err:null};
+  const p=new URLSearchParams({Type:'json',pIndex:'1',pSize:'20',SCHUL_NM:query.trim()});
+  if(key)p.set('KEY',key);
+  try{
+    const r=await fetch(`${NEIS}/schoolInfo?${p}`);
+    const d=await r.json();
+    if(d.RESULT?.CODE==='INFO-200')return{rows:[],err:null};
+    return{rows:d.schoolInfo?.[1]?.row||[],err:null};
+  }catch(e){
+    return{rows:[],err:'NEIS 연결 오류. 네트워크를 확인해주세요.'};
+  }
+}
+
+function parseDdish(ddishNm){
+  if(!ddishNm)return[];
+  return ddishNm.split(/<br\s*\/?>/i).map(s=>s.trim()).filter(Boolean).map(item=>{
+    const clean=item.replace(/\s*\*+/g,'').trim();
+    const m=clean.match(/^(.+?)\s*\(([\d.]+)\)\s*$/);
+    if(m){
+      return{name:m[1].trim(),allergens:m[2].split('.').map(Number).filter(n=>n>=1&&n<=19)};
+    }
+    return{name:clean,allergens:[]};
+  }).filter(i=>i.name.length>0);
+}
+
+async function neisLoadLunch(ofcCode,schulCode,year,month,key=''){
+  const y=String(year),m=String(month+1).padStart(2,'0');
+  const last=new Date(year,month+1,0).getDate();
+  const p=new URLSearchParams({
+    Type:'json',pIndex:'1',pSize:'100',
+    ATPT_OFCDC_SC_CODE:ofcCode,SD_SCHUL_CODE:schulCode,
+    MMEAL_SC_CODE:'2',
+    MLSV_FROM_YMD:`${y}${m}01`,
+    MLSV_TO_YMD:`${y}${m}${String(last).padStart(2,'0')}`
+  });
+  if(key)p.set('KEY',key);
+  try{
+    const r=await fetch(`${NEIS}/mealServiceDietInfo?${p}`);
+    const d=await r.json();
+    if(d.RESULT?.CODE==='INFO-200')return{data:{},err:null};
+    if(!d.mealServiceDietInfo?.[1]?.row)return{data:{},err:null};
+    const data={};
+    d.mealServiceDietInfo[1].row.forEach(row=>{
+      const dt=row.MLSV_YMD;
+      const k=`${dt.slice(0,4)}-${dt.slice(4,6)}-${dt.slice(6,8)}`;
+      data[k]=parseDdish(row.DDISH_NM);
+    });
+    return{data,err:null};
+  }catch(e){
+    return{data:{},err:'급식 데이터 로드 실패'};
+  }
+}
+
+const ALLERGENS=[
+  {id:1,ko:'난류',en:'Eggs',zh:'鸡蛋',vi:'Trứng',fil:'Itlog',mn:'Өндөг',ru:'Яйца',ja:'卵',emoji:'🥚',color:'#FFF9C4',border:'#F9A825'},
+  {id:2,ko:'우유',en:'Milk',zh:'牛奶',vi:'Sữa',fil:'Gatas',mn:'Сүү',ru:'Молоко',ja:'乳',emoji:'🥛',color:'#E3F2FD',border:'#1E88E5'},
+  {id:3,ko:'메밀',en:'Buckwheat',zh:'荞麦',vi:'Kiều mạch',fil:'Buckwheat',mn:'Гречих',ru:'Гречка',ja:'そば',emoji:'🌾',color:'#EFEBE9',border:'#795548'},
+  {id:4,ko:'땅콩',en:'Peanuts',zh:'花生',vi:'Đậu phộng',fil:'Mani',mn:'Газрын самар',ru:'Арахис',ja:'ピーナッツ',emoji:'🥜',color:'#FFF3E0',border:'#E65100'},
+  {id:5,ko:'대두',en:'Soybeans',zh:'大豆',vi:'Đậu nành',fil:'Soya',mn:'Соя',ru:'Соя',ja:'大豆',emoji:'🫘',color:'#F1F8E9',border:'#558B2F'},
+  {id:6,ko:'밀',en:'Wheat',zh:'小麦',vi:'Lúa mì',fil:'Trigo',mn:'Улаанбуудай',ru:'Пшеница',ja:'小麦',emoji:'🌾',color:'#FFFDE7',border:'#F57F17'},
+  {id:7,ko:'고등어',en:'Mackerel',zh:'鲭鱼',vi:'Cá thu',fil:'Alumahan',mn:'Макрел',ru:'Скумбрия',ja:'サバ',emoji:'🐟',color:'#E0F2F1',border:'#00897B'},
+  {id:8,ko:'게',en:'Crab',zh:'螃蟹',vi:'Cua',fil:'Alimango',mn:'Хавч',ru:'Краб',ja:'カニ',emoji:'🦀',color:'#FBE9E7',border:'#BF360C'},
+  {id:9,ko:'새우',en:'Shrimp',zh:'虾',vi:'Tôm',fil:'Hipon',mn:'Сам хорхой',ru:'Креветки',ja:'えび',emoji:'🦐',color:'#FCE4EC',border:'#C62828'},
+  {id:10,ko:'돼지고기',en:'Pork',zh:'猪肉',vi:'Thịt heo',fil:'Baboy',mn:'Гахайн мах',ru:'Свинина',ja:'豚肉',emoji:'🥩',color:'#FFF0F0',border:'#E53935'},
+  {id:11,ko:'복숭아',en:'Peach',zh:'桃子',vi:'Đào',fil:'Melokoton',mn:'Өрөгч',ru:'Персик',ja:'桃',emoji:'🍑',color:'#FCE4EC',border:'#E91E63'},
+  {id:12,ko:'토마토',en:'Tomato',zh:'番茄',vi:'Cà chua',fil:'Kamatis',mn:'Улаан лооль',ru:'Томат',ja:'トマト',emoji:'🍅',color:'#FFEBEE',border:'#D32F2F'},
+  {id:13,ko:'아황산류',en:'Sulfites',zh:'亚硫酸盐',vi:'Sulfite',fil:'Sulfite',mn:'Сульфит',ru:'Сульфиты',ja:'亜硫酸塩',emoji:'⚗️',color:'#F3E5F5',border:'#7B1FA2'},
+  {id:14,ko:'호두',en:'Walnuts',zh:'核桃',vi:'Óc chó',fil:'Walnuts',mn:'Грецк самар',ru:'Грецкий орех',ja:'クルミ',emoji:'🪨',color:'#EFEBE9',border:'#4E342E'},
+  {id:15,ko:'닭고기',en:'Chicken',zh:'鸡肉',vi:'Thịt gà',fil:'Manok',mn:'Тахианы мах',ru:'Курица',ja:'鶏肉',emoji:'🍗',color:'#FFFDE7',border:'#F9A825'},
+  {id:16,ko:'쇠고기',en:'Beef',zh:'牛肉',vi:'Thịt bò',fil:'Baka',mn:'Үхрийн мах',ru:'Говядина',ja:'牛肉',emoji:'🥩',color:'#FFEBEE',border:'#B71C1C'},
+  {id:17,ko:'오징어',en:'Squid',zh:'鱿鱼',vi:'Mực',fil:'Pusit',mn:'Далайн тахи',ru:'Кальмар',ja:'イカ',emoji:'🦑',color:'#EDE7F6',border:'#512DA8'},
+  {id:18,ko:'조개류',en:'Shellfish',zh:'贝类',vi:'Động vật có vỏ',fil:'Kabibe',mn:'Нялуун загас',ru:'Моллюски',ja:'貝',emoji:'🐚',color:'#E0F7FA',border:'#006064'},
+  {id:19,ko:'잣',en:'Pine nuts',zh:'松子',vi:'Hạt thông',fil:'Pine nuts',mn:'Нарсны самар',ru:'Кедровые орехи',ja:'松の実',emoji:'🌰',color:'#F1F8E9',border:'#2E7D32'},
+];
+const allergenById=Object.fromEntries(ALLERGENS.map(a=>[a.id,a]));
+
+const FOOD_INFO={
+  '쌀밥':{emoji:'🍚',names:{ko:'쌀밥',en:'Steamed Rice',zh:'白米饭',vi:'Cơm trắng',fil:'Puting kanin',mn:'Цагаан будаа',ru:'Белый рис',ja:'ご飯'},desc:{ko:'고슬고슬하게 지은 흰 쌀밥입니다.',en:'Fluffy steamed white rice.',zh:'蒸熟的白米饭。',vi:'Cơm trắng hấp mềm.',fil:'Malambot na lutong bigas.',mn:'Зөөлөн цагаан будаа.',ru:'Мягкий белый рис.',ja:'ふっくら白ごはん。'}},
+  '잡곡밥':{emoji:'🍚',names:{ko:'잡곡밥',en:'Multigrain Rice',zh:'杂粮饭',vi:'Cơm gạo lứt',fil:'Multigrain Rice',mn:'Олон тариан будаа',ru:'Многозерновой рис',ja:'雑穀ご飯'},desc:{ko:'현미·보리·콩을 넣은 영양 잡곡밥.',en:'Nutritious rice with brown rice and barley.',zh:'加入糙米大麦的营养杂粮饭。',vi:'Cơm giàu dinh dưỡng với gạo lứt.',fil:'Masustansyang multigrain rice.',mn:'Тэжээллэг олон тариан будаа.',ru:'Питательный многозерновой рис.',ja:'栄養豊かな雑穀ご飯。'}},
+  '현미밥':{emoji:'🍚',names:{ko:'현미밥',en:'Brown Rice',zh:'糙米饭',vi:'Cơm gạo lứt',fil:'Brown Rice',mn:'Хүрэн будаа',ru:'Коричневый рис',ja:'玄米ご飯'},desc:{ko:'식이섬유가 풍부한 건강한 현미밥.',en:'Healthy brown rice rich in fiber.',zh:'富含膳食纤维的糙米饭。',vi:'Cơm gạo lứt giàu chất xơ.',fil:'Malusog na brown rice.',mn:'Эслэгт баялаг хүрэн будаа.',ru:'Полезный коричневый рис.',ja:'食物繊維豊富な玄米ご飯。'}},
+  '미역국':{emoji:'🫕',names:{ko:'미역국',en:'Seaweed Soup',zh:'海带汤',vi:'Canh rong biển',fil:'Sopas ng Seaweed',mn:'Замагтай шөл',ru:'Суп из водорослей',ja:'わかめスープ'},desc:{ko:'부드러운 미역을 넣어 끓인 담백한 국.',en:'Light nutritious seaweed soup.',zh:'清淡营养的海带汤。',vi:'Súp nhẹ với rong biển.',fil:'Masustansyang sopas ng seaweed.',mn:'Зөөлөн замагтай хөнгөн шөл.',ru:'Лёгкий суп из морских водорослей.',ja:'わかめのあっさりスープ。'}},
+  '된장찌개':{emoji:'🥘',names:{ko:'된장찌개',en:'Soybean Paste Stew',zh:'大酱汤',vi:'Canh tương đậu',fil:'Miso Stew',mn:'Соя пастатай шөл',ru:'Суп-мисо',ja:'みそ汁'},desc:{ko:'구수한 된장으로 끓인 전통 찌개.',en:'Traditional stew with fermented soybean paste.',zh:'发酵大豆酱炖菜。',vi:'Món hầm tương đậu truyền thống.',fil:'Tradisyonal na miso stew.',mn:'Исгэсэн соя пастатай шөл.',ru:'Традиционное рагу мисо.',ja:'発酵大豆ペーストの伝統的な鍋料理。'}},
+  '순두부찌개':{emoji:'🥘',names:{ko:'순두부찌개',en:'Soft Tofu Stew',zh:'嫩豆腐锅',vi:'Canh đậu phụ non',fil:'Soft Tofu Stew',mn:'Зөөлөн тофутай шөл',ru:'Рагу из тофу',ja:'スンドゥブチゲ'},desc:{ko:'부드러운 순두부와 채소의 얼큰한 찌개.',en:'Spicy stew with silky tofu and vegetables.',zh:'嫩豆腐蔬菜辣味火锅。',vi:'Món hầm cay với đậu phụ mềm.',fil:'Maanghang na soft tofu stew.',mn:'Зөөлөн тофу ногоотой хурц шөл.',ru:'Острое рагу с нежным тофу.',ja:'絹豆腐の辛いチゲ。'}},
+  '닭개장':{emoji:'🍲',names:{ko:'닭개장',en:'Spicy Chicken Soup',zh:'辣鸡汤',vi:'Canh gà cay',fil:'Maanghang na Sopas ng Manok',mn:'Халуун тахианы шөл',ru:'Острый куриный суп',ja:'タッケジャン'},desc:{ko:'닭고기와 채소를 넣어 끓인 얼큰한 국.',en:'Spicy Korean soup with chicken and vegetables.',zh:'加入鸡肉和蔬菜的辛辣汤。',vi:'Súp gà cay với rau củ.',fil:'Maanghang na sopas ng manok.',mn:'Тахиа ногоотой хурц шөл.',ru:'Острый суп с курицей.',ja:'鶏肉と野菜の辛いスープ。'}},
+  '북어국':{emoji:'🫕',names:{ko:'북어국',en:'Dried Pollack Soup',zh:'明太鱼干汤',vi:'Canh cá minh thái khô',fil:'Dried Pollack Soup',mn:'Хатаасан загасны шөл',ru:'Суп из сушёной трески',ja:'ブゴク'},desc:{ko:'북어포와 두부, 파를 넣은 맑은 국.',en:'Clear soup with dried pollack and tofu.',zh:'干明太鱼豆腐清汤。',vi:'Súp trong với cá minh thái khô.',fil:'Malinaw na sopas ng dried pollack.',mn:'Хатаасан загас тофутай тунгалаг шөл.',ru:'Прозрачный суп из вяленой трески.',ja:'干しスケトウダラの澄んだスープ。'}},
+  '제육볶음':{emoji:'🥩',names:{ko:'제육볶음',en:'Spicy Stir-fried Pork',zh:'辣炒猪肉',vi:'Thịt heo xào cay',fil:'Maanghang na Ginisang Baboy',mn:'Хурц шарсан гахайн мах',ru:'Острая жареная свинина',ja:'チェユクポックム'},desc:{ko:'고추장 양념에 볶은 매콤한 돼지고기.',en:'Spicy pork stir-fried with chili paste.',zh:'辣椒酱腌制的炒猪肉。',vi:'Thịt heo xào cay với tương ớt.',fil:'Maanghang na ginisang baboy.',mn:'Чинжүүний пастатай хурц гахайн мах.',ru:'Острая свинина с пастой чили.',ja:'コチュジャンで炒めた辛い豚肉。'}},
+  '삼겹살구이':{emoji:'🥓',names:{ko:'삼겹살구이',en:'Grilled Pork Belly',zh:'烤五花肉',vi:'Thịt ba chỉ nướng',fil:'Inihaw na Liempo',mn:'Шарсан гахайн хэвлийн мах',ru:'Жареная свиная грудинка',ja:'サムギョプサル'},desc:{ko:'부드럽고 고소한 삼겹살 구이.',en:'Tender grilled pork belly.',zh:'嫩烤五花肉。',vi:'Thịt ba chỉ nướng mềm thơm.',fil:'Malambot na inihaw na liempo.',mn:'Зөөлөн шарсан гахайн хэвлийн мах.',ru:'Нежная жареная свиная грудинка.',ja:'柔らかいサムギョプサル。'}},
+  '닭강정':{emoji:'🍗',names:{ko:'닭강정',en:'Sweet & Spicy Fried Chicken',zh:'甜辣炸鸡',vi:'Gà chiên ngọt cay',fil:'Sweet Spicy Fried Chicken',mn:'Амттай хурц тахиа',ru:'Кисло-сладкая жареная курица',ja:'タッカンジョン'},desc:{ko:'바삭하게 튀겨 달콤매콤 소스를 버무린 닭강정.',en:'Crispy fried chicken in sweet-spicy sauce.',zh:'酥脆炸鸡裹甜辣酱。',vi:'Gà chiên giòn sốt ngọt cay.',fil:'Crispy fried chicken na may sweet-spicy sauce.',mn:'Хрустящий тахиа амттай хурц соустай.',ru:'Хрустящая курица в сладко-остром соусе.',ja:'甘辛ソースのサクサク唐揚げ。'}},
+  '불고기':{emoji:'🥩',names:{ko:'불고기',en:'Bulgogi (BBQ Beef)',zh:'烤牛肉',vi:'Thịt bò nướng Bulgogi',fil:'Bulgogi',mn:'Булгоги',ru:'Пульгоги',ja:'プルコギ'},desc:{ko:'달콤한 간장 양념에 재워 구운 쇠고기.',en:'Tender beef in sweet soy marinade.',zh:'甜味酱油腌制烤牛肉。',vi:'Thịt bò ướp nước tương ngọt.',fil:'Tender na baka sa matamis na toyo.',mn:'Чихэрлэг соёос маринадласан үхрийн мах.',ru:'Говядина в сладком соевом маринаде.',ja:'甘い醤油ダレの焼き牛肉。'}},
+  '고등어조림':{emoji:'🐟',names:{ko:'고등어조림',en:'Braised Mackerel',zh:'红烧鲭鱼',vi:'Cá thu kho',fil:'Nilaga na Mackerel',mn:'Чанасан макрел',ru:'Тушёная скумбрия',ja:'サバの煮付け'},desc:{ko:'양념에 조린 단백질 풍부한 고등어.',en:'Protein-rich mackerel braised in sauce.',zh:'酱汁炖制的富蛋白鲭鱼。',vi:'Cá thu kho giàu protein.',fil:'Mackerel na nilaga sa sarsa.',mn:'Уурагт баялаг амт нэмэлтэй чанасан макрел.',ru:'Скумбрия в соусе, богатая белком.',ja:'タレで煮たタンパク豊富なサバ。'}},
+  '생선가스':{emoji:'🐠',names:{ko:'생선가스',en:'Fish Cutlet',zh:'炸鱼排',vi:'Cá chiên xù',fil:'Fish Cutlet',mn:'Загасны котлет',ru:'Рыбный шницель',ja:'フィッシュカツ'},desc:{ko:'빵가루를 입혀 바삭하게 튀긴 생선.',en:'Crispy fish fillet coated in breadcrumbs.',zh:'裹面包屑炸制的酥脆鱼排。',vi:'Cá chiên giòn phủ vụn bánh mì.',fil:'Crispy fish fillet na may breadcrumbs.',mn:'Гурилт шарсан загасны филе.',ru:'Хрустящее рыбное филе в панировке.',ja:'パン粉のサクサク魚フライ。'}},
+  '두부조림':{emoji:'⬜',names:{ko:'두부조림',en:'Braised Tofu',zh:'卤豆腐',vi:'Đậu phụ kho',fil:'Nilaga na Tofu',mn:'Чанасан тофу',ru:'Тушёный тофу',ja:'豆腐の煮付け'},desc:{ko:'양념 간장 소스에 조린 두부.',en:'Savory tofu in seasoned soy sauce.',zh:'酱油炖制的豆腐。',vi:'Đậu phụ kho nước tương.',fil:'Tofu na nilaga sa soy sauce.',mn:'Амт нэмэлт тофу.',ru:'Тофу в соевом соусе.',ja:'醤油タレで煮た豆腐。'}},
+  '계란말이':{emoji:'🍳',names:{ko:'계란말이',en:'Rolled Omelette',zh:'鸡蛋卷',vi:'Trứng cuộn',fil:'Rolled Omelette',mn:'Өндгийн дугтуй',ru:'Яичный рулет',ja:'卵焼き'},desc:{ko:'채소와 함께 말아 구운 계란 요리.',en:'Soft omelette rolled with vegetables.',zh:'加蔬菜的软嫩蛋卷。',vi:'Trứng cuộn với rau.',fil:'Malambot na omelette na may gulay.',mn:'Ногоотой өндгийн дугтуй.',ru:'Нежный яичный рулет с овощами.',ja:'野菜入り卵焼き。'}},
+  '계란찜':{emoji:'🥚',names:{ko:'계란찜',en:'Steamed Egg',zh:'蒸蛋',vi:'Trứng hấp',fil:'Steamed Egg',mn:'Уурын өндөг',ru:'Паровое яйцо',ja:'蒸し卵'},desc:{ko:'뚝배기에 부드럽게 쪄낸 달걀 찜.',en:'Fluffy steamed egg in a stone pot.',zh:'砂锅蒸的蓬松鸡蛋羹。',vi:'Trứng hấp mềm mịn.',fil:'Malambot na steamed egg.',mn:'Зөөлөн жигнэсэн өндөг.',ru:'Пышное яйцо на пару.',ja:'ふわふわ蒸し卵。'}},
+  '잡채':{emoji:'🍜',names:{ko:'잡채',en:'Japchae (Glass Noodles)',zh:'杂菜',vi:'Miến xào Japchae',fil:'Japchae',mn:'Япчэ',ru:'Чапче',ja:'チャプチェ'},desc:{ko:'당면과 채소, 쇠고기를 볶은 잔치 음식.',en:'Glass noodles stir-fried with vegetables and beef.',zh:'粉丝炒蔬菜牛肉。',vi:'Miến xào rau củ và thịt bò.',fil:'Glass noodles na may gulay at baka.',mn:'Шилэн гоймон ногоо үхрийн махтай.',ru:'Стеклянная лапша с овощами и говядиной.',ja:'春雨と野菜、牛肉の炒め物。'}},
+  '감자조림':{emoji:'🥔',names:{ko:'감자조림',en:'Braised Potatoes',zh:'土豆烧',vi:'Khoai tây kho',fil:'Braised na Patatas',mn:'Чанасан төмс',ru:'Тушёный картофель',ja:'じゃがいもの煮物'},desc:{ko:'달콤 짭조름한 소스에 조린 감자.',en:'Potatoes in sweet-salty sauce.',zh:'甜咸酱汁炖土豆。',vi:'Khoai tây kho sốt ngọt mặn.',fil:'Patatas sa matamis at maalat na sarsa.',mn:'Чихэрлэг давсархаг соусан төмс.',ru:'Картофель в кисло-сладком соусе.',ja:'甘辛ダレのじゃがいも。'}},
+  '콩나물무침':{emoji:'🌱',names:{ko:'콩나물무침',en:'Seasoned Bean Sprouts',zh:'凉拌豆芽',vi:'Giá đỗ trộn',fil:'Seasoned Bean Sprouts',mn:'Амт нэмэлт буурцаг навч',ru:'Приправленные ростки сои',ja:'もやしのナムル'},desc:{ko:'참기름과 마늘로 무쳐낸 아삭한 콩나물.',en:'Crispy bean sprouts with sesame oil.',zh:'芝麻油大蒜调味豆芽。',vi:'Giá đỗ giòn dầu mè tỏi.',fil:'Crispy bean sprouts na may sesame oil.',mn:'Тэл тос часнытай хрустящий навч.',ru:'Хрустящие ростки с кунжутным маслом.',ja:'ごま油にんにくのもやし。'}},
+  '시금치나물':{emoji:'🥬',names:{ko:'시금치나물',en:'Seasoned Spinach',zh:'菠菜拌菜',vi:'Rau bina trộn',fil:'Seasoned Spinach',mn:'Амт нэмэлт цагаан манжин',ru:'Приправленный шпинат',ja:'ほうれん草のナムル'},desc:{ko:'참기름과 간장으로 무쳐낸 시금치 나물.',en:'Blanched spinach with sesame oil.',zh:'芝麻油酱油调味菠菜。',vi:'Rau bina trộn dầu mè.',fil:'Blanched spinach na may sesame oil.',mn:'Тэл тос соёостой цагаан манжин.',ru:'Ошпаренный шпинат с кунжутным маслом.',ja:'ごま油醤油のほうれん草。'}},
+  '도라지나물':{emoji:'🌿',names:{ko:'도라지나물',en:'Bellflower Root',zh:'桔梗拌菜',vi:'Rễ hoa chuông',fil:'Bellflower Root',mn:'Хонхны үндэс',ru:'Корень колокольчика',ja:'ときぐさのナムル'},desc:{ko:'쌉쌀한 도라지를 양념에 무쳐낸 나물.',en:'Slightly bitter bellflower root with spices.',zh:'略苦桔梗调味拌菜。',vi:'Rễ hoa chuông hơi đắng.',fil:'Bellflower root na may pampalasa.',mn:'Гашуун хонхны үндэс амт нэмэлттэй.',ru:'Горьковатый корень колокольчика.',ja:'ほろ苦いときぐさのナムル。'}},
+  '배추김치':{emoji:'🥬',names:{ko:'배추김치',en:'Kimchi',zh:'白菜泡菜',vi:'Kim chi',fil:'Kimchi',mn:'Кимчи',ru:'Кимчи',ja:'キムチ'},desc:{ko:'발효된 배추김치, 한국 식탁의 필수 반찬.',en:'Fermented napa cabbage kimchi.',zh:'发酵白菜泡菜。',vi:'Kim chi cải thảo lên men.',fil:'Fermented napa cabbage kimchi.',mn:'Исгэсэн байцааны кимчи.',ru:'Ферментированная капуста кимчи.',ja:'発酵白菜キムチ。'}},
+  '깍두기':{emoji:'🟥',names:{ko:'깍두기',en:'Cubed Radish Kimchi',zh:'萝卜泡菜',vi:'Kim chi củ cải',fil:'Radish Kimchi',mn:'Луувангийн кимчи',ru:'Кимчи из редиса',ja:'カクテキ'},desc:{ko:'무를 깍둑썰기하여 발효시킨 아삭한 김치.',en:'Crispy fermented cubed radish kimchi.',zh:'白萝卜块发酵的爽脆泡菜。',vi:'Kim chi củ cải trắng giòn.',fil:'Crispy radish kimchi.',mn:'Хрустящий луувангийн кимчи.',ru:'Хрустящее кимчи из редиса.',ja:'大根の角切りキムチ。'}},
+  '우유':{emoji:'🥛',names:{ko:'우유',en:'Milk',zh:'牛奶',vi:'Sữa',fil:'Gatas',mn:'Сүү',ru:'Молоко',ja:'牛乳'},desc:{ko:'뼈와 치아에 좋은 칼슘이 풍부한 우유.',en:'Calcium-rich milk for healthy bones.',zh:'富含钙质的牛奶。',vi:'Sữa giàu canxi tốt cho xương.',fil:'Calcium-rich na gatas.',mn:'Яс шүдэнд ашигтай кальцид баялаг сүү.',ru:'Богатое кальцием молоко.',ja:'骨に良いカルシウム豊富な牛乳。'}},
+  '오렌지':{emoji:'🍊',names:{ko:'오렌지',en:'Orange',zh:'橙子',vi:'Cam',fil:'Kahel',mn:'Жүрж',ru:'Апельсин',ja:'オレンジ'},desc:{ko:'비타민 C가 풍부한 달콤한 오렌지.',en:'Sweet orange rich in vitamin C.',zh:'富含维生素C的甜橙。',vi:'Cam ngọt giàu vitamin C.',fil:'Matamis na kahel na may vitamin C.',mn:'С витаминд баялаг жүрж.',ru:'Апельсин, богатый витамином C.',ja:'ビタミンC豊富な甘いオレンジ。'}},
+  '카레라이스':{emoji:'🍛',names:{ko:'카레라이스',en:'Curry Rice',zh:'咖喱饭',vi:'Cơm cà ri',fil:'Curry Rice',mn:'Каррийн будаа',ru:'Рис с карри',ja:'カレーライス'},desc:{ko:'향긋한 카레 소스를 얹은 인기 메뉴.',en:'Popular dish with fragrant curry sauce.',zh:'香浓咖喱酱的人气饭。',vi:'Cơm cà ri thơm ngon.',fil:'Popular na curry rice.',mn:'Үнэртэй каррийн соустай хоол.',ru:'Популярный рис с карри.',ja:'香り豊かなカレーライス。'}},
+};
+
+const HOLIDAYS={'2026-05-05':'어린이날','2026-05-15':'스승의날'};
+
+const MENU_DATA={
+  '2026-05-04':[{name:'쌀밥',allergens:[]},{name:'미역국',allergens:[6]},{name:'제육볶음',allergens:[5,6,10,13]},{name:'두부조림',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-06':[{name:'잡곡밥',allergens:[5]},{name:'북어국',allergens:[1,5,6]},{name:'닭강정',allergens:[1,5,6,13,15]},{name:'콩나물무침',allergens:[5]},{name:'깍두기',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-07':[{name:'현미밥',allergens:[]},{name:'된장찌개',allergens:[5,6]},{name:'고등어조림',allergens:[7,5,6]},{name:'시금치나물',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-08':[{name:'쌀밥',allergens:[]},{name:'순두부찌개',allergens:[5,9]},{name:'불고기',allergens:[5,6,16]},{name:'계란말이',allergens:[1,5]},{name:'깍두기',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-11':[{name:'잡곡밥',allergens:[5]},{name:'미역국',allergens:[6]},{name:'삼겹살구이',allergens:[10,13]},{name:'도라지나물',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-12':[{name:'카레라이스',allergens:[1,2,5,6,10,12,16]},{name:'계란찜',allergens:[1]},{name:'콩나물무침',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-13':[{name:'쌀밥',allergens:[]},{name:'북어국',allergens:[1,5,6]},{name:'닭강정',allergens:[1,5,6,13,15]},{name:'감자조림',allergens:[5]},{name:'깍두기',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-14':[{name:'잡곡밥',allergens:[5]},{name:'된장찌개',allergens:[5,6]},{name:'생선가스',allergens:[1,5,6]},{name:'시금치나물',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-16':[{name:'쌀밥',allergens:[]},{name:'미역국',allergens:[6]},{name:'불고기',allergens:[5,6,16]},{name:'두부조림',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-19':[{name:'잡곡밥',allergens:[5]},{name:'닭개장',allergens:[5,6,15]},{name:'계란말이',allergens:[1,5]},{name:'콩나물무침',allergens:[5]},{name:'깍두기',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-20':[{name:'쌀밥',allergens:[]},{name:'된장찌개',allergens:[5,6]},{name:'제육볶음',allergens:[5,6,10,13]},{name:'도라지나물',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-21':[{name:'현미밥',allergens:[]},{name:'순두부찌개',allergens:[5,9]},{name:'삼겹살구이',allergens:[10,13]},{name:'시금치나물',allergens:[5]},{name:'깍두기',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-22':[{name:'쌀밥',allergens:[]},{name:'닭개장',allergens:[5,6,15]},{name:'계란말이',allergens:[1,5]},{name:'잡채',allergens:[5,6,16]},{name:'배추김치',allergens:[9,13]},{name:'오렌지',allergens:[]}],
+  '2026-05-23':[{name:'잡곡밥',allergens:[5]},{name:'미역국',allergens:[6]},{name:'고등어조림',allergens:[7,5,6]},{name:'두부조림',allergens:[5]},{name:'깍두기',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-26':[{name:'쌀밥',allergens:[]},{name:'된장찌개',allergens:[5,6]},{name:'닭강정',allergens:[1,5,6,13,15]},{name:'감자조림',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-27':[{name:'카레라이스',allergens:[1,2,5,6,10,12,16]},{name:'계란찜',allergens:[1]},{name:'시금치나물',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-28':[{name:'잡곡밥',allergens:[5]},{name:'북어국',allergens:[1,5,6]},{name:'불고기',allergens:[5,6,16]},{name:'콩나물무침',allergens:[5]},{name:'깍두기',allergens:[9,13]},{name:'우유',allergens:[2]}],
+  '2026-05-29':[{name:'쌀밥',allergens:[]},{name:'순두부찌개',allergens:[5,9]},{name:'생선가스',allergens:[1,5,6]},{name:'도라지나물',allergens:[5]},{name:'배추김치',allergens:[9,13]},{name:'우유',allergens:[2]}],
+};
+
+const SAMPLE_TEXT=`2026학년도 1학기 학부모 안내 가정통신문
+
+안녕하세요, 학부모님.
+저희 학교는 모든 학생들의 건강하고 행복한 학교생활을 위해 최선을 다하고 있습니다.
+
+■ 2026학년도 1학기 주요 행사 안내
+
+1. 현장체험학습
+  - 일시: 2026년 6월 10일(수)
+  - 장소: 서울 어린이대공원
+  - 준비물: 도시락, 물, 편한 복장
+
+2. 학부모 상담 주간
+  - 기간: 2026년 6월 16일(화) ~ 20일(토)
+  - 방법: 담임교사와 개별 예약 후 진행
+  - 신청: 학교 홈페이지 또는 담임교사 연락
+
+3. 학기말 성적통지
+  - 발송일: 2026년 7월 10일(금)
+
+■ 건강 안전 안내
+- 독감 예방접종을 권장합니다
+- 아픈 경우 등교를 자제해 주세요
+
+■ 기타 안내사항
+- 학교폭력 신고: 117
+- 학교 전화: 02-1234-5678
+
+2026년 5월  담임교사 드림`;
+
+// ── TRANSLATIONS ─────────────────────────────────────────────────────────
+const T={
+  ko:{appTitle:'다문화 학생·학부모 정보 소식',appSubtitle:'학교 생활 정보를 내 언어로 확인하세요',selectLanguage:'언어를 선택해주세요',selectSchool:'학교를 선택해주세요',placeholder:'-- 학교 선택 --',startBtn:'시작하기',back:'← 돌아가기',tabNewsletter:'📄 가정통신문',tabMeal:'🍱 급식 식단',uploadPdf:'PDF 파일 업로드',uploadDesc:'가정통신문 PDF를 여기에 끌어다 놓거나 클릭하여 선택하세요',sampleBtn:'샘플 가정통신문 불러오기',translateBtn:'자동 번역하기',translating:'번역 중...',translationNote:'MyMemory API 번역 (하루 5,000자 제한)',pdfPanel:'PDF 미리보기',transPanel:'번역본',noTranslation:'다른 언어 선택 후 "자동 번역하기"를 클릭하세요',allergenTitle:'알레르기 유발 식품 선택',allergenDesc:'해당하는 알레르기 항목을 선택하면 메뉴에 표시됩니다',clearAll:'전체 해제',selectAll:'전체 선택',todayTitle:'오늘의 급식',monthlyTitle:'월간 급식 메뉴',allergenWarn:'⚠ 알레르기 주의',noMeal:'급식 없음',weekend:'주말',noAllergenTip:'알레르기 항목을 선택하면 해당 메뉴가 표시됩니다',ingredientsTitle:'오늘 급식의 알레르기 정보',days:['일','월','화','수','목','금','토'],months:['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],todayDate:'2026년 5월 22일 금요일'},
+  en:{appTitle:'Multicultural Student & Parent Info',appSubtitle:'Access school information in your language',selectLanguage:'Select your language',selectSchool:'Select your school',placeholder:'-- Choose School --',startBtn:'Get Started',back:'← Back',tabNewsletter:'📄 Newsletter',tabMeal:'🍱 Lunch Menu',uploadPdf:'Upload PDF',uploadDesc:'Drag & drop a newsletter PDF here, or click to select',sampleBtn:'Load Sample Newsletter',translateBtn:'Auto Translate',translating:'Translating...',translationNote:'Powered by MyMemory API',pdfPanel:'PDF Preview',transPanel:'Translation',noTranslation:'Click "Auto Translate" to translate this document',allergenTitle:'Select Allergens',allergenDesc:'Select allergens to highlight matching menu items',clearAll:'Clear All',selectAll:'Select All',todayTitle:"Today's Lunch",monthlyTitle:'Monthly Lunch Menu',allergenWarn:'⚠ Allergen Alert',noMeal:'No meal',weekend:'Weekend',noAllergenTip:'Select allergens above to highlight menu items',ingredientsTitle:"Today's Allergen Info",days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],months:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],todayDate:'Friday, May 22, 2026'},
+  zh:{appTitle:'多文化学生家长信息',appSubtitle:'用您的语言了解学校信息',selectLanguage:'请选择语言',selectSchool:'请选择学校',placeholder:'-- 选择学校 --',startBtn:'开始',back:'← 返回',tabNewsletter:'📄 家庭通知书',tabMeal:'🍱 午餐菜单',uploadPdf:'上传PDF',uploadDesc:'将PDF拖放到此处，或单击选择',sampleBtn:'加载示例通知',translateBtn:'自动翻译',translating:'翻译中...',translationNote:'由MyMemory API提供翻译',pdfPanel:'PDF预览',transPanel:'翻译',noTranslation:'点击"自动翻译"翻译此文件',allergenTitle:'选择过敏原',allergenDesc:'选择过敏原以在菜单中高亮显示',clearAll:'全部清除',selectAll:'全部选择',todayTitle:'今日午餐',monthlyTitle:'每月午餐菜单',allergenWarn:'⚠ 过敏警告',noMeal:'无午餐',weekend:'周末',noAllergenTip:'选择过敏原以高亮菜单项目',ingredientsTitle:'今日过敏原信息',days:['日','一','二','三','四','五','六'],months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],todayDate:'2026年5月22日 星期五'},
+  vi:{appTitle:'Thông tin học sinh & phụ huynh đa văn hóa',appSubtitle:'Xem thông tin trường học bằng ngôn ngữ của bạn',selectLanguage:'Chọn ngôn ngữ',selectSchool:'Chọn trường học',placeholder:'-- Chọn Trường --',startBtn:'Bắt đầu',back:'← Quay lại',tabNewsletter:'📄 Bản tin gia đình',tabMeal:'🍱 Thực đơn',uploadPdf:'Tải lên PDF',uploadDesc:'Kéo & thả PDF vào đây hoặc nhấp để chọn',sampleBtn:'Tải bản tin mẫu',translateBtn:'Dịch tự động',translating:'Đang dịch...',translationNote:'Dịch bởi MyMemory API',pdfPanel:'Xem trước PDF',transPanel:'Bản dịch',noTranslation:'Nhấp "Dịch tự động" để dịch tài liệu',allergenTitle:'Chọn chất gây dị ứng',allergenDesc:'Chọn chất gây dị ứng để đánh dấu thực đơn',clearAll:'Xóa tất cả',selectAll:'Chọn tất cả',todayTitle:'Bữa trưa hôm nay',monthlyTitle:'Thực đơn hàng tháng',allergenWarn:'⚠ Cảnh báo dị ứng',noMeal:'Không có bữa ăn',weekend:'Cuối tuần',noAllergenTip:'Chọn chất gây dị ứng để đánh dấu thực đơn',ingredientsTitle:'Thông tin dị ứng hôm nay',days:['CN','T2','T3','T4','T5','T6','T7'],months:['Th.1','Th.2','Th.3','Th.4','Th.5','Th.6','Th.7','Th.8','Th.9','Th.10','Th.11','Th.12'],todayDate:'Thứ Sáu, 22/05/2026'},
+  fil:{appTitle:'Impormasyon para sa Multikulturang Mag-aaral',appSubtitle:'Impormasyon ng paaralan sa inyong wika',selectLanguage:'Pumili ng wika',selectSchool:'Pumili ng paaralan',placeholder:'-- Piliin ang Paaralan --',startBtn:'Magsimula',back:'← Bumalik',tabNewsletter:'📄 Balita ng Pamilya',tabMeal:'🍱 Menu ng Tanghalian',uploadPdf:'Mag-upload ng PDF',uploadDesc:'I-drag at i-drop ang PDF dito o i-click para pumili',sampleBtn:'I-load ang Sample',translateBtn:'Auto na Isalin',translating:'Nagsasalin...',translationNote:'Sinasalin ng MyMemory API',pdfPanel:'Preview ng PDF',transPanel:'Salin',noTranslation:'I-click ang "Auto na Isalin" para isalin',allergenTitle:'Pumili ng Allergen',allergenDesc:'Pumili ng allergen para i-highlight ang mga pagkain',clearAll:'I-clear Lahat',selectAll:'Piliin Lahat',todayTitle:'Tanghalian Ngayon',monthlyTitle:'Buwanang Menu',allergenWarn:'⚠ Babala sa Allergen',noMeal:'Walang pagkain',weekend:'Weekend',noAllergenTip:'Pumili ng allergen para i-highlight ang menu',ingredientsTitle:'Impormasyon ng Allergen Ngayon',days:['Lin','Lun','Mar','Miy','Huw','Biy','Sab'],months:['Ene','Peb','Mar','Abr','Mayo','Hun','Hul','Ago','Set','Okt','Nob','Dis'],todayDate:'Biyernes, Mayo 22, 2026'},
+  mn:{appTitle:'Олон соёлт сурагч, эцэг эхийн мэдээлэл',appSubtitle:'Сургуулийн мэдээллийг өөрийн хэлээр харах',selectLanguage:'Хэлийг сонгоно уу',selectSchool:'Сургуулийг сонгоно уу',placeholder:'-- Сургууль сонгох --',startBtn:'Эхлэх',back:'← Буцах',tabNewsletter:'📄 Гэрийн мэдэгдэл',tabMeal:'🍱 Үдийн хоол',uploadPdf:'PDF оруулах',uploadDesc:'PDF файлыг энд чирж оруулах эсвэл дарж сонгоно уу',sampleBtn:'Жишээ мэдэгдэл ачаалах',translateBtn:'Автоматаар орчуулах',translating:'Орчуулж байна...',translationNote:'MyMemory API орчуулга',pdfPanel:'PDF урьдчилан харах',transPanel:'Орчуулга',noTranslation:'"Автоматаар орчуулах" дарна уу',allergenTitle:'Харшил үүсгэгчийг сонгох',allergenDesc:'Харшил үүсгэгчийг сонгоход цэсэнд тэмдэглэгдэнэ',clearAll:'Бүгдийг цэвэрлэх',selectAll:'Бүгдийг сонгох',todayTitle:'Өнөөдрийн үдийн хоол',monthlyTitle:'Сарын цэс',allergenWarn:'⚠ Харшлын анхааруулга',noMeal:'Хоол байхгүй',weekend:'Амралт',noAllergenTip:'Харшил үүсгэгчийг сонгоход цэс тэмдэглэгдэнэ',ingredientsTitle:'Өнөөдрийн харшлын мэдээлэл',days:['Ня','Да','Мя','Лх','Пү','Ба','Бя'],months:['1-р','2-р','3-р','4-р','5-р','6-р','7-р','8-р','9-р','10-р','11-р','12-р'],todayDate:'2026.05.22 Баасан'},
+  ru:{appTitle:'Информация для мультикультурных семей',appSubtitle:'Информация о школе на вашем языке',selectLanguage:'Выберите язык',selectSchool:'Выберите школу',placeholder:'-- Выбрать школу --',startBtn:'Начать',back:'← Назад',tabNewsletter:'📄 Информационный листок',tabMeal:'🍱 Меню обеда',uploadPdf:'Загрузить PDF',uploadDesc:'Перетащите PDF сюда или нажмите для выбора',sampleBtn:'Загрузить образец',translateBtn:'Авто-перевод',translating:'Переводим...',translationNote:'Перевод через MyMemory API',pdfPanel:'Просмотр PDF',transPanel:'Перевод',noTranslation:'Нажмите "Авто-перевод" для перевода',allergenTitle:'Выбрать аллергены',allergenDesc:'Выберите аллергены для отметки в меню',clearAll:'Сбросить всё',selectAll:'Выбрать всё',todayTitle:'Сегодняшний обед',monthlyTitle:'Ежемесячное меню',allergenWarn:'⚠ Аллерген',noMeal:'Нет питания',weekend:'Выходной',noAllergenTip:'Выберите аллергены для выделения меню',ingredientsTitle:'Информация об аллергенах сегодня',days:['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],months:['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],todayDate:'Пятница, 22 мая 2026'},
+  ja:{appTitle:'多文化学生・保護者情報',appSubtitle:'学校情報をあなたの言語で確認できます',selectLanguage:'言語を選択してください',selectSchool:'学校を選択してください',placeholder:'-- 学校を選ぶ --',startBtn:'始める',back:'← 戻る',tabNewsletter:'📄 家庭通信文',tabMeal:'🍱 給食メニュー',uploadPdf:'PDFをアップロード',uploadDesc:'PDFをドラッグ＆ドロップ、またはクリックして選択',sampleBtn:'サンプル通信文を読み込む',translateBtn:'自動翻訳',translating:'翻訳中...',translationNote:'MyMemory APIによる翻訳',pdfPanel:'PDFプレビュー',transPanel:'翻訳',noTranslation:'「自動翻訳」をクリックして翻訳してください',allergenTitle:'アレルゲンを選択',allergenDesc:'アレルゲンを選択するとメニューに表示されます',clearAll:'全て解除',selectAll:'全て選択',todayTitle:'今日の給食',monthlyTitle:'月間給食メニュー',allergenWarn:'⚠ アレルギー注意',noMeal:'給食なし',weekend:'週末',noAllergenTip:'アレルゲンを選択するとメニューが強調表示されます',ingredientsTitle:'今日のアレルゲン情報',days:['日','月','火','水','木','金','土'],months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],todayDate:'2026年5月22日（金）'},
+};
+
+// ── EMOJI AUTO-MAPPING ───────────────────────────────────────────────
+const EMOJI_MAP=[
+  [/비빔밥|덮밥|볶음밥|주먹밥|김밥볶음밥/,'🍛'],
+  [/밥|쌀|현미|잡곡|귀리|찹쌀|기장|보리|솥밥|잔치밥/,'🍚'],
+  [/라멘|라면|우동/,'🍜'],
+  [/스파게티|파스타|로제|카르보나라|크림스프|크림스파|명란크림/,'🍝'],
+  [/면|국수|냉면|쫄면|소바|잔치국수/,'🍜'],
+  [/찌개|전골/,'🫕'],
+  [/국|탕|스프/,'🍲'],
+  [/치킨|닭강정|닭갈비|통닭|닭꼬치|컬리텐더/,'🍗'],
+  [/삼겹살|베이컨|족발|훈제족발/,'🥓'],
+  [/돈까스|돈카츠|까스|스테이크|함박/,'🥩'],
+  [/소시지|핫도그/,'🌭'],
+  [/돼지|돈육|순대|소떡/,'🥩'],
+  [/소고기|쇠고기|불고기|갈비|꿔바로우/,'🥩'],
+  [/오리/,'🦆'],
+  [/회|초밥|스시|네모유부초밥|유부초밥/,'🍣'],
+  [/새우|오징어|해물|조개|꼬치어묵|어묵|전복/,'🦐'],
+  [/생선|고등어|연어|참치|명태|조기|멸치|북어|가오리|통치즈까스/,'🐟'],
+  [/피자/,'🍕'],
+  [/카레|커리/,'🍛'],
+  [/김치/,'🥬'],
+  [/샐러드/,'🥗'],
+  [/나물|무침|겉절이|장아찌|무생채|단무지|석박지/,'🥬'],
+  [/케이크|케잌/,'🎂'],
+  [/아이스크림|빙수|샤베트|하겐다즈|구슬아이스|레인보우/,'🍨'],
+  [/초코|초콜릿|흑당|티라미수/,'🍫'],
+  [/크로와상|크로켓|빵|모닝빵|호두과자|앙버터/,'🥐'],
+  [/쿠키|과자/,'🍪'],
+  [/두부/,'⬜'],
+  [/계란|달걀/,'🥚'],
+  [/우유|라떼|밀크|요거트|파르페/,'🥛'],
+  [/수박/,'🍉'],
+  [/멜론/,'🍈'],
+  [/딸기/,'🍓'],
+  [/사과/,'🍎'],
+  [/귤|감귤|오렌지/,'🍊'],
+  [/포도/,'🍇'],
+  [/바나나/,'🍌'],
+  [/복숭아|살구/,'🍑'],
+  [/과일/,'🍎'],
+  [/튀김|고구마튀김/,'🍘'],
+  [/만두/,'🥟'],
+  [/감자/,'🥔'],
+  [/전|부침|해물김치전/,'🥞'],
+  [/죽/,'🥣'],
+  [/김밥/,'🍙'],
+  [/떡볶이|떡|메밀전병/,'🍡'],
+  [/찜|장각삼계탕|삼계탕/,'🍲'],
+  [/잡채/,'🍜'],
+  [/볶음/,'🥘'],
+  [/구이|조림|볶음/,'🍳'],
+];
+const autoEmoji=name=>{
+  for(const[rx,em]of EMOJI_MAP)if(rx.test(name))return em;
+  return'🍽️';
+};
+
+// ── HELPERS ────────────────────────────────────────────────────────────
+const aName=(a,lang)=>a[lang]||a.ko;
+const foodName=(name,lang,cache)=>FOOD_INFO[name]?.names?.[lang]||(cache?.[lang]?.[name])||name;
+// 한국어 자동 설명 생성 (재료 + 조리법 감지)
+const INGR_KO=[
+  ['쇠고기','쇠고기'],['소고기','쇠고기'],['갈비','갈비'],['등뼈','돼지 등뼈'],['불고기','불고기'],
+  ['삼겹살','삼겹살'],['돼지','돼지고기'],['소시지','소시지'],['순대','순대'],['족발','족발'],
+  ['닭','닭고기'],['오리','오리고기'],
+  ['고등어','고등어'],['참치','참치'],['명란','명란'],['연어','연어'],['전복','전복'],
+  ['새우','새우'],['해물','해산물'],['어묵','어묵'],
+  ['계란','계란'],['달걀','계란'],['두부','두부'],
+  ['미역','미역'],['시금치','시금치'],['버섯','버섯'],['감자','감자'],['가지','가지'],
+  ['야채','야채'],['콩','콩'],['치즈','치즈'],['크림','크림'],
+];
+const genKoDesc=name=>{
+  const fi=()=>{for(const[k,v]of INGR_KO)if(name.includes(k))return v;return null;};
+  const i=fi();
+  const w=(s,fallback)=>i?s.replace('재료',i):fallback;
+  if(name.includes('비빔밥'))return w('재료와 채소를 얹어 비벼 먹는 한국식 밥','채소와 나물을 얹어 비벼 먹는 한국식 밥');
+  if(name.includes('볶음밥')||name.includes('덮밥'))return w('재료로 만든 한국식 볶음밥','한국식 볶음밥');
+  if(name.includes('주먹밥'))return w('재료가 들어간 한국식 주먹밥','한국식 주먹밥');
+  if(name.includes('솥밥'))return w('재료를 넣어 솥에 지은 밥','솥에 지은 고소한 한국 밥');
+  if(name.includes('밥'))return w('재료가 들어간 한국 전통 밥 요리','한국 전통 밥 요리');
+  if(name.includes('찌개'))return w('재료로 끓인 한국 전통 찌개','한국 전통 찌개');
+  if(name.includes('국')||name.includes('탕'))return w('재료로 끓인 한국 전통 국','한국 전통 국물 요리');
+  if(name.includes('스파게티')||name.includes('파스타')||name.includes('로제')||name.includes('카르보나라'))return w('재료가 들어간 크리미한 파스타','이탈리아식 파스타 요리');
+  if(name.includes('라멘')||name.includes('라면'))return w('재료가 들어간 라면','구수한 라면 요리');
+  if(name.includes('우동'))return w('재료가 들어간 일본식 우동','일본식 우동 요리');
+  if(name.includes('국수')||name.includes('면')||name.includes('소바'))return w('재료가 들어간 한국식 면 요리','한국식 면 요리');
+  if(name.includes('함박')||name.includes('스테이크'))return w('재료로 만든 스테이크 요리','구운 스테이크 요리');
+  if(name.includes('까스')||name.includes('커틀릿')||name.includes('돈카츠'))return w('재료를 바삭하게 튀긴 커틀릿','바삭하게 튀긴 커틀릿 요리');
+  if(name.includes('볶음'))return w('재료를 볶아서 만든 한국 요리','볶아서 만든 한국 요리');
+  if(name.includes('조림'))return w('재료를 달콤 짭조름하게 조린 한국 요리','양념에 조린 한국 반찬');
+  if(name.includes('구이'))return w('재료를 불에 구운 한국 요리','불에 구운 한국 요리');
+  if(name.includes('찜'))return w('재료를 쪄서 만든 한국 요리','쪄서 만든 한국 요리');
+  if(name.includes('튀김'))return w('재료를 바삭하게 튀긴 요리','바삭하게 튀긴 한국 요리');
+  if(name.includes('전')||name.includes('부침'))return w('재료가 들어간 한국식 전','한국식 부침 요리');
+  if(name.includes('무침')||name.includes('나물'))return w('재료를 양념에 무친 한국 반찬','양념에 무친 한국 반찬');
+  if(name.includes('겉절이')||name.includes('김치'))return'발효시켜 만든 한국 전통 김치';
+  if(name.includes('장아찌'))return'소금·식초에 절인 한국 전통 밑반찬';
+  if(name.includes('샐러드'))return w('재료로 만든 신선한 샐러드','신선한 채소로 만든 샐러드');
+  if(name.includes('케이크')||name.includes('케잌'))return'달콤한 케이크 디저트';
+  if(name.includes('아이스크림')||name.includes('구슬아이스'))return'시원한 아이스크림 디저트';
+  if(name.includes('빙수'))return'시원한 한국식 빙수 디저트';
+  if(name.includes('피자'))return'이탈리아식 피자';
+  if(name.includes('만두'))return'고기와 채소가 들어간 한국 전통 만두';
+  if(name.includes('떡볶이'))return'달콤 매콤한 한국 전통 길거리 음식';
+  if(name.includes('떡'))return'한국 전통 떡 요리';
+  if(name.includes('빵')||name.includes('크로와상'))return'부드러운 빵 간식';
+  if(name.includes('쿠키'))return'달콤한 쿠키 디저트';
+  return'한국 학교 급식 메뉴';
+};
+const foodDesc=(name,lang,cache)=>{
+  if(FOOD_INFO[name])return FOOD_INFO[name].desc?.[lang]||FOOD_INFO[name].desc?.ko||'';
+  if(lang==='ko')return genKoDesc(name);
+  return cache?.[lang]?.[name]||'';
+};
+const foodEmoji=(name)=>FOOD_INFO[name]?.emoji||autoEmoji(name);
+const pad=n=>String(n).padStart(2,'0');
+const dateKey=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
+
+async function translate(text,targetLang){
+  const map={ko:'ko',en:'en',zh:'zh-CN',vi:'vi',fil:'tl',mn:'mn',ru:'ru',ja:'ja'};
+  const lang=map[targetLang]||'en';
+  if(targetLang==='ko')return text;
+  const chunks=[];
+  for(let i=0;i<text.length;i+=400)chunks.push(text.slice(i,i+400));
+  const parts=[];
+  for(const chunk of chunks){
+    try{
+      const r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=ko|${lang}`);
+      const d=await r.json();
+      parts.push(d.responseData?.translatedText||chunk);
+      await new Promise(r=>setTimeout(r,80));
+    }catch{parts.push(chunk)}
+  }
+  return parts.join('\n');
+}
+
+// ── COMPONENTS ─────────────────────────────────────────────────────────
+function SchoolSearch({schoolData,onSelect,apiKey}){
+  const [query,setQuery]=useState('');
+  const [results,setResults]=useState([]);
+  const [loading,setLoading]=useState(false);
+  const [err,setErr]=useState('');
+  const [open,setOpen]=useState(false);
+  const timer=useRef(null);
+
+  const handleInput=e=>{
+    const q=e.target.value;
+    setQuery(q);setOpen(false);
+    if(timer.current)clearTimeout(timer.current);
+    if(q.trim().length<2){setResults([]);return;}
+    timer.current=setTimeout(async()=>{
+      setLoading(true);setErr('');
+      const{rows,err:e}=await neisSearchSchools(q,apiKey);
+      setResults(rows);setErr(e||'');
+      setOpen(true);setLoading(false);
+    },350);
+  };
+
+  if(schoolData) return html`
+    <div class="school-selected">
+      <span style="font-size:20px">🏫</span>
+      <div class="school-selected-name">
+        ${schoolData.SCHUL_NM}
+        <span style="font-size:11px;color:var(--text-muted);font-weight:400;margin-left:6px">
+          ${schoolData.ATPT_OFCDC_SC_NM} · ${schoolData.SCHUL_KND_SC_NM}
+        </span>
+      </div>
+      <button class="school-clear-btn" onClick=${()=>onSelect(null)} title="다시 선택">✕</button>
+    </div>`;
+
+  return html`
+    <div>
+      <div class="neis-badge">📡 NEIS 실시간 연동</div>
+      <div class="school-search-wrap">
+        <input class="school-search-input" type="text" value=${query}
+          onInput=${handleInput}
+          onFocus=${()=>results.length>0&&setOpen(true)}
+          onBlur=${()=>setTimeout(()=>setOpen(false),200)}
+          placeholder="🔍 학교명 검색 (예: 행복초등학교)"/>
+        ${loading&&html`<span class="search-spin"><span class="spinner" style="width:14px;height:14px;border-width:2px"></span></span>`}
+        ${open&&results.length>0&&html`
+          <div class="school-dropdown">
+            ${results.map((s,i)=>html`
+              <div class="school-result-item" key=${i}
+                onMouseDown=${()=>onSelect(s)}>
+                <div>
+                  <div class="school-result-name">${s.SCHUL_NM}</div>
+                  <div class="school-result-meta">${s.LCTN_SC_NM||s.ATPT_OFCDC_SC_NM}</div>
+                </div>
+                <div class="school-result-meta" style="text-align:right">
+                  ${s.SCHUL_KND_SC_NM}
+                </div>
+              </div>`)}
+          </div>`}
+        ${open&&!loading&&results.length===0&&query.length>=2&&html`
+          <div class="school-dropdown">
+            <div class="school-search-status">검색 결과가 없습니다</div>
+          </div>`}
+      </div>
+      ${err&&html`<p style="font-size:12px;color:var(--danger);margin-bottom:8px">${err}</p>`}
+    </div>`;
+}
+
+function SelectionPage({lang,setLang,schoolData,setSchoolData,onStart,apiKey}){
+  const tr=T[lang];
+  return html`
+    <div class="page1">
+      <div class="page1-card">
+        <span class="page1-icon">🏫</span>
+        <h1 class="page1-title">${tr.appTitle}</h1>
+        <p class="page1-subtitle">${tr.appSubtitle}</p>
+        <p class="section-label">${tr.selectLanguage}</p>
+        <div class="lang-grid">
+          ${LANGUAGES.map(l=>html`
+            <button class=${`lang-btn${lang===l.code?' active':''}`} onClick=${()=>setLang(l.code)}>
+              <span class="lang-flag">${l.flag}</span>
+              <span class="lang-name">${l.nativeName}</span>
+            </button>`)}
+        </div>
+        <p class="section-label">${tr.selectSchool}</p>
+        <${SchoolSearch} schoolData=${schoolData} onSelect=${setSchoolData} apiKey=${apiKey}/>
+        <button class="start-btn" onClick=${onStart} disabled=${!schoolData}>${tr.startBtn} →</button>
+      </div>
+    </div>`;
+}
+
+function NewsletterTab({lang}){
+  const tr=T[lang];
+  const [pdfUrl,setPdfUrl]=useState(null);
+  const [pdfText,setPdfText]=useState('');      // 업로드된 PDF에서 추출한 텍스트
+  const [extracting,setExtracting]=useState(false); // PDF 텍스트 추출 중
+  const [extractErr,setExtractErr]=useState('');
+  const [isSample,setIsSample]=useState(false);
+  const [translated,setTranslated]=useState('');
+  const [loading,setLoading]=useState(false);
+  const [dragOver,setDragOver]=useState(false);
+  const fileRef=useRef();
+
+  // pdfjs-dist를 CDN에서 동적으로 로드해 텍스트 추출
+  const extractPdfText=async(file)=>{
+    setExtracting(true);setExtractErr('');setPdfText('');
+    try{
+      const pdfjsLib=await import('https://esm.sh/pdfjs-dist@4.4.168');
+      pdfjsLib.GlobalWorkerOptions.workerSrc='https://esm.sh/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs';
+      const buf=await file.arrayBuffer();
+      const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+      let text='';
+      for(let p=1;p<=pdf.numPages;p++){
+        const page=await pdf.getPage(p);
+        const content=await page.getTextContent();
+        // 같은 줄 항목 병합, 줄바꿈 유지
+        let lastY=null;
+        for(const item of content.items){
+          if(lastY!==null&&Math.abs(item.transform[5]-lastY)>5)text+='\n';
+          text+=item.str;
+          lastY=item.transform[5];
+        }
+        text+='\n\n';
+      }
+      const trimmed=text.trim();
+      setPdfText(trimmed);
+      if(!trimmed)setExtractErr('텍스트를 추출할 수 없습니다. (스캔 이미지 PDF이거나 텍스트가 없습니다)');
+    }catch(e){
+      console.error('PDF extraction error:',e);
+      setExtractErr('PDF 텍스트 추출 실패: '+e.message);
+    }
+    setExtracting(false);
+  };
+
+  const loadFile=async f=>{
+    if(!f||f.type!=='application/pdf')return;
+    setPdfUrl(URL.createObjectURL(f));
+    setIsSample(false);setTranslated('');
+    await extractPdfText(f);
+  };
+  const loadSample=()=>{setIsSample(true);setPdfUrl(null);setPdfText('');setExtractErr('');setTranslated('');};
+  const reset=()=>{setPdfUrl(null);setPdfText('');setExtractErr('');setIsSample(false);setTranslated('');};
+
+  const doTranslate=async()=>{
+    if(!isSample&&!pdfUrl)return;
+    // 샘플이면 SAMPLE_TEXT, 실제 PDF면 추출된 텍스트 사용
+    const source=isSample?SAMPLE_TEXT:pdfText;
+    if(!source){setTranslated('번역할 텍스트가 없습니다. PDF에서 텍스트를 추출할 수 없었습니다.');return;}
+    setLoading(true);
+    try{const r=await translate(source,lang);setTranslated(r);}
+    catch{setTranslated('번역 오류가 발생했습니다.');}
+    setLoading(false);
+  };
+  const hasFile=pdfUrl||isSample;
+
+  if(!hasFile) return html`
+    <div class="newsletter-container">
+      <div class=${`upload-zone${dragOver?' dragover':''}`}
+        onDragOver=${e=>{e.preventDefault();setDragOver(true)}}
+        onDragLeave=${()=>setDragOver(false)}
+        onDrop=${e=>{e.preventDefault();setDragOver(false);loadFile(e.dataTransfer.files[0])}}
+        onClick=${()=>fileRef.current.click()}>
+        <input type="file" accept=".pdf" ref=${fileRef} onChange=${e=>loadFile(e.target.files[0])} style="display:none"/>
+        <span class="upload-icon">📄</span>
+        <p class="upload-title">${tr.uploadPdf}</p>
+        <p class="upload-desc">${tr.uploadDesc}</p>
+        <button class="sample-btn" type="button" onClick=${e=>{e.stopPropagation();loadSample()}}>
+          📋 ${tr.sampleBtn}
+        </button>
+      </div>
+    </div>`;
+
+  return html`
+    <div class="newsletter-container">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+        <span style="font-size:13px;color:var(--text-muted)">
+          📄 ${isSample?'sample_newsletter.pdf':'업로드된 파일'}
+          ${extracting?html`<span class="spinner" style="width:12px;height:12px;border-width:2px;vertical-align:middle;margin-left:6px"></span><span style="font-size:11px;color:var(--text-muted);margin-left:4px">텍스트 추출 중...</span>`:''}
+          ${!extracting&&pdfText?html`<span style="font-size:11px;color:#16A34A;margin-left:4px">✓ ${pdfText.length.toLocaleString()}자 추출됨</span>`:''}
+          ${extractErr?html`<span style="font-size:11px;color:var(--danger);margin-left:4px">⚠ ${extractErr}</span>`:''}
+        </span>
+        <button class="sample-btn" onClick=${reset} style="margin-left:auto">✕ 닫기</button>
+        <button class="sample-btn" onClick=${()=>fileRef.current.click()}>+ ${tr.uploadPdf}</button>
+        <input type="file" accept=".pdf" ref=${fileRef} onChange=${e=>loadFile(e.target.files[0])} style="display:none"/>
+      </div>
+      <div class="newsletter-viewer">
+        <div class="viewer-panel">
+          <div class="viewer-panel-header">
+            <span>📄 ${tr.pdfPanel}</span>
+            ${lang!=='ko'&&html`
+              <button class="translate-btn" onClick=${doTranslate} disabled=${loading||extracting||(!isSample&&!pdfText&&!extractErr)}>
+                ${loading?html`<span class="spinner"></span>`:tr.translateBtn}
+              </button>`}
+          </div>
+          ${pdfUrl
+            ?html`<iframe src=${pdfUrl} style="flex:1;width:100%;border:none;min-height:560px;background:#f5f5f5"></iframe>`
+            :html`<div style="flex:1;padding:20px;background:#fafafa;min-height:560px;font-family:monospace;font-size:13px;line-height:1.8;white-space:pre-wrap;color:#334155;overflow:auto">${SAMPLE_TEXT}</div>`}
+        </div>
+        <div class="viewer-panel" style="--header-bg:#065F46">
+          <div class="viewer-panel-header" style="background:#065F46">
+            <span>🌐 ${tr.transPanel}</span>
+            ${translated&&html`<span style="font-size:11px;opacity:.8">✓ 완료</span>`}
+          </div>
+          <div class="translation-body">
+            ${loading
+              ?html`<div class="translation-placeholder"><span class="spinner"></span><span>${tr.translating}</span><p style="font-size:11px;margin-top:8px;color:var(--text-muted)">${tr.translationNote}</p></div>`
+              :translated
+                ?html`<div style="white-space:pre-wrap;line-height:1.9">${translated}</div>`
+                :html`<div class="translation-placeholder">
+                    <span style="font-size:36px">🌐</span>
+                    <p style="font-weight:600;color:var(--text)">${tr.transPanel}</p>
+                    <p style="font-size:13px">${tr.noTranslation}</p>
+                    ${lang==='ko'&&html`<p style="font-size:12px;margin-top:8px;color:#DC2626">※ 다른 언어 선택 후 번역 가능</p>`}
+                  </div>`}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function AllergenFilter({lang,selected,toggle,setSelected}){
+  const tr=T[lang];
+  return html`
+    <div class="allergen-filter-card">
+      <p class="allergen-filter-title">${tr.allergenTitle}</p>
+      <p class="allergen-filter-desc">${tr.allergenDesc}</p>
+      <div class="allergen-filter-actions">
+        <button class="filter-action-btn" onClick=${()=>setSelected(new Set())}>${tr.clearAll}</button>
+        <button class="filter-action-btn" onClick=${()=>setSelected(new Set(ALLERGENS.map(a=>a.id)))}>${tr.selectAll}</button>
+        ${selected.size>0&&html`<span style="font-size:12px;color:var(--danger);font-weight:700">⚠ ${selected.size}개 선택됨</span>`}
+      </div>
+      <div class="allergen-grid">
+        ${ALLERGENS.map(a=>{
+          const sel=selected.has(a.id);
+          return html`
+            <button class=${`allergen-chip${sel?' selected':''}`}
+              style=${sel?`background:${a.color};border-color:${a.border};color:#1E293B`:''}
+              onClick=${()=>toggle(a.id)}>
+              <span>${a.emoji}</span>
+              <span>${aName(a,lang)}</span>
+              ${sel&&html`<span style=${`color:${a.border}`}>✓</span>`}
+            </button>`;
+        })}
+      </div>
+    </div>`;
+}
+
+function TodayMeal({lang,selected,menuData,nameCache,descCache}){
+  const tr=T[lang];
+  const activeData=menuData||MENU_DATA;
+  const menu=activeData['2026-05-22']||[];
+  const allAllergenIds=[...new Set(menu.flatMap(i=>i.allergens))].sort((a,b)=>a-b);
+
+  return html`
+    <div class="today-meal-card">
+      <div class="today-meal-header">
+        <span class="today-meal-title">🍱 ${tr.todayTitle}</span>
+        <span class="today-date">${tr.todayDate}</span>
+      </div>
+      <div class="tray-container">
+        <div class="tray">
+          <div class="tray-grid">
+            ${menu.map((item,i)=>{
+              const alert=item.allergens.some(id=>selected.has(id));
+              const matched=item.allergens.map(id=>allergenById[id]).filter(Boolean);
+              const alertList=matched.filter(a=>selected.has(a.id));
+              return html`
+                <div class=${`tray-item${alert?' allergen-alert':''}`} key=${i}>
+                  <div class="tray-emoji">${foodEmoji(item.name)}</div>
+                  <div class="tray-name">${foodName(item.name,lang,nameCache)}</div>
+                  <div class="tray-desc">${foodDesc(item.name,lang,descCache)}</div>
+                  ${matched.length>0&&html`
+                    <div class="tray-allergens">
+                      ${matched.map(a=>html`
+                        <span class=${`allergen-badge${selected.has(a.id)?' warn':' info'}`} title=${aName(a,lang)}>
+                          ${a.emoji} ${a.id}
+                        </span>`)}
+                    </div>`}
+                  ${alert&&html`
+                    <div class="allergen-warning-banner">
+                      ⚠ ${tr.allergenWarn}
+                      <span style="font-size:8px;font-weight:400;margin-left:2px">${alertList.map(a=>aName(a,lang)).join(', ')}</span>
+                    </div>`}
+                </div>`;
+            })}
+          </div>
+        </div>
+        ${selected.size===0&&html`
+          <p style="text-align:center;margin-top:12px;font-size:12px;color:#92400E">
+            💡 ${tr.noAllergenTip}
+          </p>`}
+        <div class="legend-box">
+          <p class="legend-title">${tr.ingredientsTitle}</p>
+          <div class="legend-chips">
+            ${allAllergenIds.map(id=>{
+              const a=allergenById[id];if(!a)return null;
+              const sel=selected.has(id);
+              return html`
+                <span class="legend-chip" style=${`background:${sel?a.color:'#F8FAFC'};border:2px solid ${sel?a.border:'#E2E8F0'};font-weight:${sel?700:400}`}>
+                  ${a.emoji} ${a.id}. ${aName(a,lang)}
+                </span>`;
+            })}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function MonthlyCalendar({lang,selected,menuData,onMonthChange,nameCache}){
+  const tr=T[lang];
+  const [year,setYear]=useState(2026);
+  const [month,setMonth]=useState(4);
+  const activeData=menuData||MENU_DATA;
+  const today={y:2026,m:4,d:22};
+
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const dow=d=>new Date(year,month,d).getDay();
+
+  const prev=()=>{
+    const ny=month===0?year-1:year,nm=month===0?11:month-1;
+    setYear(ny);setMonth(nm);
+    onMonthChange&&onMonthChange(ny,nm);
+  };
+  const next=()=>{
+    const ny=month===11?year+1:year,nm=month===11?0:month+1;
+    setYear(ny);setMonth(nm);
+    onMonthChange&&onMonthChange(ny,nm);
+  };
+
+  const cells=[...Array(firstDay).fill(null),...Array.from({length:daysInMonth},(_,i)=>i+1)];
+
+  return html`
+    <div class="calendar-card">
+      <div class="calendar-header">
+        <button class="cal-nav-btn" onClick=${prev}>◀</button>
+        <span class="calendar-title">${year}년 ${tr.months[month]}</span>
+        <button class="cal-nav-btn" onClick=${next}>▶</button>
+      </div>
+      <div class="calendar-day-header">
+        ${tr.days.map((d,i)=>html`<div class="cal-day-label" key=${i}>${d}</div>`)}
+      </div>
+      <div class="calendar-grid">
+        ${cells.map((day,idx)=>{
+          if(!day)return html`<div key=${`e${idx}`} class="cal-cell empty-cell"></div>`;
+          const d=dow(day);
+          const dk=dateKey(year,month,day);
+          const menu=activeData[dk];
+          const holiday=HOLIDAYS[dk];
+          const isToday=year===today.y&&month===today.m&&day===today.d;
+          const isWE=d===0||d===6;
+          const hits=menu?menu.filter(i=>i.allergens.some(id=>selected.has(id))):[];
+          const hasA=hits.length>0;
+          const cls=['cal-cell',isWE?'weekend-cell':'',holiday?'holiday-cell':'',isToday?'today-cell':'',hasA?'has-allergen':'',d===0?'sunday':d===6?'saturday':''].filter(Boolean).join(' ');
+          return html`
+            <div class=${cls} key=${day}>
+              ${hasA&&html`<div class="allergen-dot"></div>`}
+              <div class="cal-date">${day}</div>
+              ${holiday&&html`<div class="holiday-label">${holiday}</div>`}
+              ${menu&&!holiday
+                ?html`<div class="cal-menu-items">
+                    ${menu.slice(0,4).map((item,i)=>{
+                      const hit=item.allergens.some(id=>selected.has(id));
+                      return html`<div class=${`cal-menu-item${hit?' allergen-hit':''}`} key=${i}>${lang==='ko'?item.name:foodName(item.name,lang,nameCache)}</div>`;
+                    })}
+                    ${menu.length>4&&html`<div class="cal-menu-item" style="color:#94A3B8">+${menu.length-4}</div>`}
+                  </div>`
+                :!holiday&&isWE
+                  ?html`<div style="font-size:10px;color:#CBD5E1;padding:2px 4px">${tr.weekend}</div>`
+                  :null}
+            </div>`;
+        })}
+      </div>
+      ${selected.size>0&&html`
+        <div style="padding:10px 16px;background:#FEF2F2;border-top:1px solid #FECACA;display:flex;align-items:center;gap:8px">
+          <span style="font-size:16px">⚠️</span>
+          <span style="font-size:12px;color:#B91C1C;font-weight:600">
+            ${tr.allergenWarn}: ${Array.from(selected).map(id=>aName(allergenById[id]||{ko:'?'},lang)).join(', ')}
+          </span>
+        </div>`}
+    </div>`;
+}
+
+function MealTab({lang,selected,toggle,setSelected,schoolData,apiKey}){
+  const [menuData,setMenuData]=useState(null); // null = use MENU_DATA fallback
+  const [loadStatus,setLoadStatus]=useState('idle'); // idle|loading|ok|err
+  const [loadMsg,setLoadMsg]=useState('');
+  const [curYear,setCurYear]=useState(2026);
+  const [curMonth,setCurMonth]=useState(4);
+  const [nameCache,setNameCache]=useState({}); // {lang: {koName: translatedName}}
+  const nameCacheRef=useRef({});
+  nameCacheRef.current=nameCache;
+  const [descCache,setDescCache]=useState({}); // {lang: {koName: translatedDesc}}
+  const descCacheRef=useRef({});
+  descCacheRef.current=descCache;
+
+  const translateMenuNames=async(data,targetLang)=>{
+    if(targetLang==='ko'||!data)return;
+    const allNames=[...new Set(Object.values(data).flat().map(i=>i.name))];
+    const nCache=nameCacheRef.current;
+    const dCache=descCacheRef.current;
+    const map={en:'en',zh:'zh-CN',vi:'vi',fil:'tl',mn:'mn',ru:'ru',ja:'ja'};
+    const langCode=map[targetLang]||'en';
+    // 이름 또는 설명이 아직 캐시에 없는 항목만 번역
+    const unknown=allNames.filter(n=>
+      !FOOD_INFO[n]&&(
+        !(nCache[targetLang]&&nCache[targetLang][n])||
+        !(dCache[targetLang]&&dCache[targetLang][n])
+      )
+    );
+    if(unknown.length===0)return;
+    // "이름|||설명" 형태로 묶어서 한 번의 API 호출로 이름+설명 동시 번역 (API 호출 수 절반)
+    const translations=await Promise.all(
+      unknown.map(name=>{
+        const koDesc=genKoDesc(name);
+        const combined=`${name}|||${koDesc}`;
+        return fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(combined)}&langpair=ko|${langCode}&de=alicepark96@gmail.com`)
+          .then(r=>r.json())
+          .then(d=>{
+            const t=d.responseData?.translatedText||'';
+            const sep=t.indexOf('|||');
+            return{
+              name,
+              tName:sep>0?t.slice(0,sep).trim():t.trim(),
+              tDesc:sep>0?t.slice(sep+3).trim():''
+            };
+          })
+          .catch(()=>({name,tName:null,tDesc:null}));
+      })
+    );
+    const nRes={},dRes={};
+    translations.forEach(({name,tName,tDesc})=>{
+      if(tName&&tName!==name)nRes[name]=tName;
+      if(tDesc)dRes[name]=tDesc;
+    });
+    if(Object.keys(nRes).length>0)setNameCache(prev=>({...prev,[targetLang]:{...(prev[targetLang]||{}),...nRes}}));
+    if(Object.keys(dRes).length>0)setDescCache(prev=>({...prev,[targetLang]:{...(prev[targetLang]||{}),...dRes}}));
+  };
+
+  const loadNEIS=async(year,month)=>{
+    if(!schoolData)return;
+    setLoadStatus('loading');
+    const{data,err}=await neisLoadLunch(
+      schoolData.ATPT_OFCDC_SC_CODE,
+      schoolData.SD_SCHUL_CODE,
+      year,month,apiKey
+    );
+    if(err){setLoadStatus('err');setLoadMsg(err);return;}
+    const count=Object.keys(data).length;
+    if(count===0){
+      setLoadStatus('err');
+      setLoadMsg('해당 월의 급식 데이터가 없습니다. (학교 급식 미제공 또는 방학)');
+      return;
+    }
+    setMenuData(prev=>({...(prev||MENU_DATA),...data}));
+    setLoadStatus('ok');
+    setLoadMsg(`${schoolData.SCHUL_NM} 실제 급식 데이터 ${count}일치 로드 완료`);
+  };
+
+  // 학교 선택 시 현재 월 자동 로드
+  useEffect(()=>{
+    if(schoolData?.SD_SCHUL_CODE)loadNEIS(curYear,curMonth);
+  },[schoolData?.SD_SCHUL_CODE]);
+
+  // lang 또는 menuData 변경 시 번역 (둘 다 dependency로)
+  useEffect(()=>{
+    if(lang==='ko')return;
+    const data=menuData||MENU_DATA;
+    translateMenuNames(data,lang);
+  },[lang,menuData]);
+
+  const handleMonthChange=(y,m)=>{setCurYear(y);setCurMonth(m);loadNEIS(y,m);};
+
+  const activeData=menuData||MENU_DATA;
+  const isReal=menuData!==null;
+
+  return html`
+    <div class="meal-container">
+      ${schoolData&&html`
+        <div class="meal-source-bar">
+          <span class="meal-source-text">
+            ${loadStatus==='loading'
+              ?html`<span class="spinner" style="width:12px;height:12px;border-width:2px;vertical-align:middle"></span> NEIS에서 급식 데이터 불러오는 중...`
+              :loadStatus==='ok'
+                ?html`✅ ${loadMsg}`
+                :loadStatus==='err'
+                  ?html`⚠️ ${loadMsg}`
+                  :html`📡 ${schoolData.SCHUL_NM} 연결됨`}
+          </span>
+          <button class="meal-reload-btn"
+            disabled=${loadStatus==='loading'}
+            onClick=${()=>loadNEIS(curYear,curMonth)}>
+            🔄 새로고침
+          </button>
+        </div>`}
+      <${AllergenFilter} lang=${lang} selected=${selected} toggle=${toggle} setSelected=${setSelected}/>
+      <${TodayMeal} lang=${lang} selected=${selected} menuData=${activeData} nameCache=${nameCache} descCache=${descCache}/>
+      <${MonthlyCalendar} lang=${lang} selected=${selected} menuData=${activeData} onMonthChange=${handleMonthChange} nameCache=${nameCache}/>
+    </div>`;
+}
+
+function MainPage({lang,setLang,schoolData,selected,toggle,setSelected,onBack,apiKey}){
+  const [tab,setTab]=useState('meal');
+  const tr=T[lang];
+  const schoolName=schoolData?.SCHUL_NM||'';
+  return html`
+    <div class="page2">
+      <header class="page2-header">
+        <div class="header-left">
+          <button class="back-btn" onClick=${onBack}>${tr.back}</button>
+          <span class="header-school">🏫 ${schoolName}</span>
+        </div>
+        <div class="lang-switcher">
+          ${LANGUAGES.map(l=>html`
+            <button class=${`lang-chip${lang===l.code?' active':''}`} onClick=${()=>setLang(l.code)} title=${l.nativeName}>
+              ${l.flag}
+            </button>`)}
+        </div>
+      </header>
+      <div class="tab-bar">
+        <button class=${`tab-btn${tab==='newsletter'?' active':''}`} onClick=${()=>setTab('newsletter')}>${tr.tabNewsletter}</button>
+        <button class=${`tab-btn${tab==='meal'?' active':''}`} onClick=${()=>setTab('meal')}>${tr.tabMeal}</button>
+      </div>
+      <div class="page2-content">
+        ${tab==='newsletter'
+          ?html`<${NewsletterTab} lang=${lang}/>`
+          :html`<${MealTab} lang=${lang} selected=${selected} toggle=${toggle} setSelected=${setSelected} schoolData=${schoolData} apiKey=${apiKey}/>`}
+      </div>
+    </div>`;
+}
+
+function App(){
+  const [page,setPage]=useState(1);
+  const [lang,setLang]=useState('ko');
+  const [schoolData,setSchoolData]=useState(null);
+  const [selected,setSelected]=useState(new Set());
+  const [apiKey,setApiKey]=useState('924ecf9a27dd4c8690ab7b9334ae29be');
+  const toggle=id=>setSelected(prev=>{const n=new Set(prev);n.has(id)?n.delete(id):n.add(id);return n;});
+
+  return page===1
+    ?html`<${SelectionPage} lang=${lang} setLang=${setLang} schoolData=${schoolData} setSchoolData=${setSchoolData} onStart=${()=>setPage(2)} apiKey=${apiKey}/>`
+    :html`<${MainPage} lang=${lang} setLang=${setLang} schoolData=${schoolData} selected=${selected} toggle=${toggle} setSelected=${setSelected} onBack=${()=>setPage(1)} apiKey=${apiKey}/>`;
+}
+
+render(html`<${App}/>`,document.getElementById('root'));
+</script>
+</body>
+</html>
