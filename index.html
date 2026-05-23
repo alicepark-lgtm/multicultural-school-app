@@ -110,7 +110,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .cal-day-label{padding:8px;text-align:center;font-size:12px;font-weight:700;color:var(--text-muted)}
 .cal-day-label:first-child{color:#EF4444}.cal-day-label:last-child{color:#2563EB}
 .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border)}
-.cal-cell{background:var(--card);min-height:88px;padding:6px;transition:background .1s;position:relative}
+.cal-cell{background:var(--card);min-height:88px;padding:6px;transition:background .1s;position:relative;min-width:0;overflow:hidden;cursor:pointer}
+.cal-cell.selected-date-cell{box-shadow:inset 0 0 0 2px #F59E0B;background:#FFFBEB}
 .cal-cell:hover:not(.empty-cell){background:#F0F7FF}
 .cal-cell.empty-cell{background:#FAFAFA}.cal-cell.weekend-cell{background:#F9FAFB}.cal-cell.holiday-cell{background:#FFF5F5}
 .cal-cell.today-cell{background:#EFF6FF;box-shadow:inset 0 0 0 2px var(--primary)}
@@ -481,6 +482,18 @@ const foodDesc=(name,lang,cache)=>{
 const foodEmoji=(name)=>FOOD_INFO[name]?.emoji||autoEmoji(name);
 const pad=n=>String(n).padStart(2,'0');
 const dateKey=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
+// 날짜키(YYYY-MM-DD)를 언어별로 포맷
+const fmtDate=(dk,lang,tr)=>{
+  if(!dk)return'';
+  const[y,m,d]=dk.split('-').map(Number);
+  const dow=new Date(y,m-1,d).getDay();
+  const dn=tr.days[dow],mn=tr.months[m-1];
+  if(lang==='ko')return`${y}년 ${m}월 ${d}일 ${dn}요일`;
+  if(lang==='zh')return`${y}年${m}月${d}日 ${dn}`;
+  if(lang==='ja')return`${y}年${m}月${d}日（${dn}）`;
+  if(lang==='mn')return`${y}.${pad(m)}.${pad(d)} ${dn}`;
+  return`${dn}, ${mn} ${d}, ${y}`;
+};
 
 async function translate(text,targetLang){
   const map={ko:'ko',en:'en',zh:'zh-CN',vi:'vi',fil:'tl',mn:'mn',ru:'ru',ja:'ja'};
@@ -755,21 +768,29 @@ function AllergenFilter({lang,selected,toggle,setSelected}){
     </div>`;
 }
 
-function TodayMeal({lang,selected,menuData,nameCache,descCache}){
+function TodayMeal({lang,selected,menuData,nameCache,descCache,selectedDate}){
   const tr=T[lang];
   const activeData=menuData||MENU_DATA;
-  const menu=activeData['2026-05-22']||[];
+  const todayKey='2026-05-23';
+  const dk=selectedDate||todayKey;
+  const menu=activeData[dk]||[];
   const allAllergenIds=[...new Set(menu.flatMap(i=>i.allergens))].sort((a,b)=>a-b);
+  const isToday=dk===todayKey;
+  const dateLabel=fmtDate(dk,lang,tr);
 
   return html`
     <div class="today-meal-card">
       <div class="today-meal-header">
-        <span class="today-meal-title">🍱 ${tr.todayTitle}</span>
-        <span class="today-date">${tr.todayDate}</span>
+        <span class="today-meal-title">🍱 ${isToday?tr.todayTitle:dateLabel}</span>
+        <span class="today-date">${isToday?dateLabel:''}</span>
       </div>
       <div class="tray-container">
-        <div class="tray">
-          <div class="tray-grid">
+        ${menu.length===0&&html`
+          <div style="text-align:center;padding:32px;color:var(--text-muted)">
+            <div style="font-size:40px;margin-bottom:10px">🚫</div>
+            <div style="font-size:14px;font-weight:600">${tr.noMeal}</div>
+          </div>`}
+        ${menu.length>0&&html`<div class="tray"><div class="tray-grid">
             ${menu.map((item,i)=>{
               const alert=item.allergens.some(id=>selected.has(id));
               const matched=item.allergens.map(id=>allergenById[id]).filter(Boolean);
@@ -793,9 +814,8 @@ function TodayMeal({lang,selected,menuData,nameCache,descCache}){
                     </div>`}
                 </div>`;
             })}
-          </div>
-        </div>
-        ${selected.size===0&&html`
+          </div></div>`}
+        ${menu.length>0&&selected.size===0&&html`
           <p style="text-align:center;margin-top:12px;font-size:12px;color:#92400E">
             💡 ${tr.noAllergenTip}
           </p>`}
@@ -816,7 +836,7 @@ function TodayMeal({lang,selected,menuData,nameCache,descCache}){
     </div>`;
 }
 
-function MonthlyCalendar({lang,selected,menuData,onMonthChange,nameCache}){
+function MonthlyCalendar({lang,selected,menuData,onMonthChange,nameCache,selectedDate,onDateSelect}){
   const tr=T[lang];
   const [year,setYear]=useState(2026);
   const [month,setMonth]=useState(4);
@@ -892,8 +912,9 @@ function MonthlyCalendar({lang,selected,menuData,onMonthChange,nameCache}){
             const hasA=menu?menu.some(i=>i.allergens.some(id=>selected.has(id))):false;
             const dn=tr.days[day.getDay()];
             return html`
-              <div style="border-radius:12px;overflow:hidden;border:${isToday?'2px solid var(--primary)':'1px solid var(--border)'}" key=${dk}>
-                <div style="padding:8px 12px;background:${isToday?'var(--primary)':'#F1F5F9'};display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <div style="border-radius:12px;overflow:hidden;border:${dk===selectedDate?'2px solid #F59E0B':isToday?'2px solid var(--primary)':'1px solid var(--border)'};cursor:pointer" key=${dk}
+                onClick=${()=>onDateSelect&&onDateSelect(dk)}>
+                <div style="padding:8px 12px;background:${dk===selectedDate?'#FEF3C7':isToday?'var(--primary)':'#F1F5F9'};display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                   <span style="font-weight:700;color:${isToday?'white':'var(--text)'}">
                     ${dn} ${m+1}/${d}
                   </span>
@@ -949,9 +970,10 @@ function MonthlyCalendar({lang,selected,menuData,onMonthChange,nameCache}){
           const isWE=d===0||d===6;
           const hits=menu?menu.filter(i=>i.allergens.some(id=>selected.has(id))):[];
           const hasA=hits.length>0;
-          const cls=['cal-cell',isWE?'weekend-cell':'',holiday?'holiday-cell':'',isToday?'today-cell':'',hasA?'has-allergen':'',d===0?'sunday':d===6?'saturday':''].filter(Boolean).join(' ');
+          const isSelected=dk===selectedDate;
+          const cls=['cal-cell',isWE?'weekend-cell':'',holiday?'holiday-cell':'',isToday?'today-cell':'',hasA?'has-allergen':'',isSelected?'selected-date-cell':'',d===0?'sunday':d===6?'saturday':''].filter(Boolean).join(' ');
           return html`
-            <div class=${cls} key=${day}>
+            <div class=${cls} key=${day} onClick=${()=>!isWE&&onDateSelect&&onDateSelect(dk)}>
               ${hasA&&html`<div class="allergen-dot"></div>`}
               <div class="cal-date">${day}</div>
               ${holiday&&html`<div class="holiday-label">${holiday}</div>`}
@@ -1067,7 +1089,13 @@ function MealTab({lang,selected,toggle,setSelected,schoolData,apiKey}){
     translateMenuNames(data,lang);
   },[lang,menuData]);
 
+  const [selectedDate,setSelectedDate]=useState('2026-05-23');
   const handleMonthChange=(y,m)=>{setCurYear(y);setCurMonth(m);loadNEIS(y,m);};
+  const handleDateSelect=dk=>{
+    setSelectedDate(dk);
+    // 급식판으로 스크롤
+    document.querySelector('.today-meal-card')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
 
   const activeData=menuData||MENU_DATA;
   const isReal=menuData!==null;
@@ -1092,8 +1120,8 @@ function MealTab({lang,selected,toggle,setSelected,schoolData,apiKey}){
           </button>
         </div>`}
       <${AllergenFilter} lang=${lang} selected=${selected} toggle=${toggle} setSelected=${setSelected}/>
-      <${TodayMeal} lang=${lang} selected=${selected} menuData=${activeData} nameCache=${nameCache} descCache=${descCache}/>
-      <${MonthlyCalendar} lang=${lang} selected=${selected} menuData=${activeData} onMonthChange=${handleMonthChange} nameCache=${nameCache}/>
+      <${TodayMeal} lang=${lang} selected=${selected} menuData=${activeData} nameCache=${nameCache} descCache=${descCache} selectedDate=${selectedDate}/>
+      <${MonthlyCalendar} lang=${lang} selected=${selected} menuData=${activeData} onMonthChange=${handleMonthChange} nameCache=${nameCache} selectedDate=${selectedDate} onDateSelect=${handleDateSelect}/>
     </div>`;
 }
 
