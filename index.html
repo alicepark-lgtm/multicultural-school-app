@@ -175,6 +175,8 @@ const NEIS='https://open.neis.go.kr/hub';
 
 const hasKorean=s=>/[가-힣]/.test(s);
 const isLatinOnly=s=>/^[a-zA-Z0-9\s\-'.]+$/.test(s.trim())&&/[a-zA-Z]/.test(s);
+// NEIS ENG_SCHUL_NM이 소문자로 저장된 경우 Title Case로 변환
+const toTitleCase=s=>s?s.replace(/\b\w/g,c=>c.toUpperCase()):s;
 
 async function neisSearchSchools(query,key=''){
   if(!query||query.trim().length<2)return{rows:[],err:null};
@@ -505,11 +507,13 @@ function SchoolSearch({schoolData,onSelect,apiKey}){
   const [loading,setLoading]=useState(false);
   const [err,setErr]=useState('');
   const [open,setOpen]=useState(false);
+  const [isEng,setIsEng]=useState(false); // 영어로 검색 중인지
   const timer=useRef(null);
 
   const handleInput=e=>{
     const q=e.target.value;
     setQuery(q);setOpen(false);
+    setIsEng(isLatinOnly(q));
     if(timer.current)clearTimeout(timer.current);
     if(q.trim().length<2){setResults([]);return;}
     timer.current=setTimeout(async()=>{
@@ -525,7 +529,9 @@ function SchoolSearch({schoolData,onSelect,apiKey}){
       <span style="font-size:20px">🏫</span>
       <div class="school-selected-name">
         ${schoolData.SCHUL_NM}
-        <span style="font-size:11px;color:var(--text-muted);font-weight:400;margin-left:6px">
+        ${schoolData.ENG_SCHUL_NM&&html`
+          <span style="display:block;font-size:11px;color:var(--text-muted);font-weight:400;margin-top:1px">${toTitleCase(schoolData.ENG_SCHUL_NM)}</span>`}
+        <span style="font-size:11px;color:var(--text-muted);font-weight:400">
           ${schoolData.ATPT_OFCDC_SC_NM} · ${schoolData.SCHUL_KND_SC_NM}
         </span>
       </div>
@@ -540,18 +546,23 @@ function SchoolSearch({schoolData,onSelect,apiKey}){
           onInput=${handleInput}
           onFocus=${()=>results.length>0&&setOpen(true)}
           onBlur=${()=>setTimeout(()=>setOpen(false),200)}
-          placeholder="🔍 학교명 검색 (예: 행복초등학교)"/>
+          placeholder="🔍 학교명 검색 (예: 행복초, Haengbok Elementary)"/>
         ${loading&&html`<span class="search-spin"><span class="spinner" style="width:14px;height:14px;border-width:2px"></span></span>`}
         ${open&&results.length>0&&html`
           <div class="school-dropdown">
             ${results.map((s,i)=>html`
               <div class="school-result-item" key=${i}
                 onMouseDown=${()=>onSelect(s)}>
-                <div>
-                  <div class="school-result-name">${s.SCHUL_NM}</div>
-                  <div class="school-result-meta">${s.LCTN_SC_NM||s.ATPT_OFCDC_SC_NM}</div>
+                <div style="min-width:0;flex:1">
+                  ${isEng
+                    ?html`
+                      <div class="school-result-name">${toTitleCase(s.ENG_SCHUL_NM)||s.SCHUL_NM}</div>
+                      <div class="school-result-meta">${s.SCHUL_NM} · ${s.LCTN_SC_NM||s.ATPT_OFCDC_SC_NM}</div>`
+                    :html`
+                      <div class="school-result-name">${s.SCHUL_NM}</div>
+                      <div class="school-result-meta">${[toTitleCase(s.ENG_SCHUL_NM),s.LCTN_SC_NM||s.ATPT_OFCDC_SC_NM].filter(Boolean).join(' · ')}</div>`}
                 </div>
-                <div class="school-result-meta" style="text-align:right">
+                <div class="school-result-meta" style="text-align:right;white-space:nowrap">
                   ${s.SCHUL_KND_SC_NM}
                 </div>
               </div>`)}
