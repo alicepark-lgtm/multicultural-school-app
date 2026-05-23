@@ -89,6 +89,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .translate-btn:hover:not(:disabled){background:#EFF6FF}.translate-btn:disabled{opacity:.6;cursor:not-allowed}
 .translation-body{flex:1;padding:20px;overflow-y:auto;font-size:14px;line-height:1.8;color:var(--text);min-height:400px}
 .translation-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-muted);text-align:center;gap:12px;padding:24px;min-height:300px}
+.summary-card{background:#ECFDF5;border:1.5px solid #6EE7B7;border-radius:var(--radius);padding:14px 18px;margin-bottom:14px}
+.summary-header{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;color:#065F46;cursor:pointer;user-select:none}
+.summary-toggle{background:none;border:none;cursor:pointer;font-size:13px;color:#059669;padding:0 4px;font-family:inherit;line-height:1}
+.summary-list{margin:10px 0 2px 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.summary-list li{display:flex;gap:8px;font-size:13px;line-height:1.6;color:#134E4A}
+.summary-list li::before{content:'•';color:#059669;font-weight:700;flex-shrink:0}
 /* MEAL */
 .meal-container{max-width:1000px;margin:0 auto}
 .allergen-filter-card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-sm);margin-bottom:20px}
@@ -354,14 +360,14 @@ const SAMPLE_TEXT=`2026학년도 1학기 학부모 안내 가정통신문
 
 // ── TRANSLATIONS ─────────────────────────────────────────────────────────
 const T={
-  ko:{appTitle:'다문화 학생·학부모 정보 소식',appSubtitle:'학교 생활 정보를 내 언어로 확인하세요',selectLanguage:'언어를 선택해주세요',selectSchool:'학교를 선택해주세요',placeholder:'-- 학교 선택 --',startBtn:'시작하기',back:'← 돌아가기',tabNewsletter:'📄 가정통신문',tabMeal:'🍱 급식 식단',uploadPdf:'PDF 파일 업로드',uploadDesc:'가정통신문 PDF를 여기에 끌어다 놓거나 클릭하여 선택하세요',sampleBtn:'샘플 가정통신문 불러오기',translateBtn:'자동 번역하기',translating:'번역 중...',translationNote:'MyMemory API 번역 (하루 5,000자 제한)',pdfPanel:'PDF 미리보기',transPanel:'번역본',noTranslation:'다른 언어 선택 후 "자동 번역하기"를 클릭하세요',allergenTitle:'알레르기 유발 식품 선택',allergenDesc:'해당하는 알레르기 항목을 선택하면 메뉴에 표시됩니다',clearAll:'전체 해제',selectAll:'전체 선택',todayTitle:'오늘의 급식',monthlyTitle:'월간 급식 메뉴',allergenWarn:'⚠ 알레르기 주의',noMeal:'급식 없음',weekend:'주말',noAllergenTip:'알레르기 항목을 선택하면 해당 메뉴가 표시됩니다',ingredientsTitle:'오늘 급식의 알레르기 정보',days:['일','월','화','수','목','금','토'],months:['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],todayDate:'2026년 5월 22일 금요일'},
-  en:{appTitle:'Multicultural Student & Parent Info',appSubtitle:'Access school information in your language',selectLanguage:'Select your language',selectSchool:'Select your school',placeholder:'-- Choose School --',startBtn:'Get Started',back:'← Back',tabNewsletter:'📄 Newsletter',tabMeal:'🍱 Lunch Menu',uploadPdf:'Upload PDF',uploadDesc:'Drag & drop a newsletter PDF here, or click to select',sampleBtn:'Load Sample Newsletter',translateBtn:'Auto Translate',translating:'Translating...',translationNote:'Powered by MyMemory API',pdfPanel:'PDF Preview',transPanel:'Translation',noTranslation:'Click "Auto Translate" to translate this document',allergenTitle:'Select Allergens',allergenDesc:'Select allergens to highlight matching menu items',clearAll:'Clear All',selectAll:'Select All',todayTitle:"Today's Lunch",monthlyTitle:'Monthly Lunch Menu',allergenWarn:'⚠ Allergen Alert',noMeal:'No meal',weekend:'Weekend',noAllergenTip:'Select allergens above to highlight menu items',ingredientsTitle:"Today's Allergen Info",days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],months:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],todayDate:'Friday, May 22, 2026'},
-  zh:{appTitle:'多文化学生家长信息',appSubtitle:'用您的语言了解学校信息',selectLanguage:'请选择语言',selectSchool:'请选择学校',placeholder:'-- 选择学校 --',startBtn:'开始',back:'← 返回',tabNewsletter:'📄 家庭通知书',tabMeal:'🍱 午餐菜单',uploadPdf:'上传PDF',uploadDesc:'将PDF拖放到此处，或单击选择',sampleBtn:'加载示例通知',translateBtn:'自动翻译',translating:'翻译中...',translationNote:'由MyMemory API提供翻译',pdfPanel:'PDF预览',transPanel:'翻译',noTranslation:'点击"自动翻译"翻译此文件',allergenTitle:'选择过敏原',allergenDesc:'选择过敏原以在菜单中高亮显示',clearAll:'全部清除',selectAll:'全部选择',todayTitle:'今日午餐',monthlyTitle:'每月午餐菜单',allergenWarn:'⚠ 过敏警告',noMeal:'无午餐',weekend:'周末',noAllergenTip:'选择过敏原以高亮菜单项目',ingredientsTitle:'今日过敏原信息',days:['日','一','二','三','四','五','六'],months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],todayDate:'2026年5月22日 星期五'},
-  vi:{appTitle:'Thông tin học sinh & phụ huynh đa văn hóa',appSubtitle:'Xem thông tin trường học bằng ngôn ngữ của bạn',selectLanguage:'Chọn ngôn ngữ',selectSchool:'Chọn trường học',placeholder:'-- Chọn Trường --',startBtn:'Bắt đầu',back:'← Quay lại',tabNewsletter:'📄 Bản tin gia đình',tabMeal:'🍱 Thực đơn',uploadPdf:'Tải lên PDF',uploadDesc:'Kéo & thả PDF vào đây hoặc nhấp để chọn',sampleBtn:'Tải bản tin mẫu',translateBtn:'Dịch tự động',translating:'Đang dịch...',translationNote:'Dịch bởi MyMemory API',pdfPanel:'Xem trước PDF',transPanel:'Bản dịch',noTranslation:'Nhấp "Dịch tự động" để dịch tài liệu',allergenTitle:'Chọn chất gây dị ứng',allergenDesc:'Chọn chất gây dị ứng để đánh dấu thực đơn',clearAll:'Xóa tất cả',selectAll:'Chọn tất cả',todayTitle:'Bữa trưa hôm nay',monthlyTitle:'Thực đơn hàng tháng',allergenWarn:'⚠ Cảnh báo dị ứng',noMeal:'Không có bữa ăn',weekend:'Cuối tuần',noAllergenTip:'Chọn chất gây dị ứng để đánh dấu thực đơn',ingredientsTitle:'Thông tin dị ứng hôm nay',days:['CN','T2','T3','T4','T5','T6','T7'],months:['Th.1','Th.2','Th.3','Th.4','Th.5','Th.6','Th.7','Th.8','Th.9','Th.10','Th.11','Th.12'],todayDate:'Thứ Sáu, 22/05/2026'},
-  fil:{appTitle:'Impormasyon para sa Multikulturang Mag-aaral',appSubtitle:'Impormasyon ng paaralan sa inyong wika',selectLanguage:'Pumili ng wika',selectSchool:'Pumili ng paaralan',placeholder:'-- Piliin ang Paaralan --',startBtn:'Magsimula',back:'← Bumalik',tabNewsletter:'📄 Balita ng Pamilya',tabMeal:'🍱 Menu ng Tanghalian',uploadPdf:'Mag-upload ng PDF',uploadDesc:'I-drag at i-drop ang PDF dito o i-click para pumili',sampleBtn:'I-load ang Sample',translateBtn:'Auto na Isalin',translating:'Nagsasalin...',translationNote:'Sinasalin ng MyMemory API',pdfPanel:'Preview ng PDF',transPanel:'Salin',noTranslation:'I-click ang "Auto na Isalin" para isalin',allergenTitle:'Pumili ng Allergen',allergenDesc:'Pumili ng allergen para i-highlight ang mga pagkain',clearAll:'I-clear Lahat',selectAll:'Piliin Lahat',todayTitle:'Tanghalian Ngayon',monthlyTitle:'Buwanang Menu',allergenWarn:'⚠ Babala sa Allergen',noMeal:'Walang pagkain',weekend:'Weekend',noAllergenTip:'Pumili ng allergen para i-highlight ang menu',ingredientsTitle:'Impormasyon ng Allergen Ngayon',days:['Lin','Lun','Mar','Miy','Huw','Biy','Sab'],months:['Ene','Peb','Mar','Abr','Mayo','Hun','Hul','Ago','Set','Okt','Nob','Dis'],todayDate:'Biyernes, Mayo 22, 2026'},
-  mn:{appTitle:'Олон соёлт сурагч, эцэг эхийн мэдээлэл',appSubtitle:'Сургуулийн мэдээллийг өөрийн хэлээр харах',selectLanguage:'Хэлийг сонгоно уу',selectSchool:'Сургуулийг сонгоно уу',placeholder:'-- Сургууль сонгох --',startBtn:'Эхлэх',back:'← Буцах',tabNewsletter:'📄 Гэрийн мэдэгдэл',tabMeal:'🍱 Үдийн хоол',uploadPdf:'PDF оруулах',uploadDesc:'PDF файлыг энд чирж оруулах эсвэл дарж сонгоно уу',sampleBtn:'Жишээ мэдэгдэл ачаалах',translateBtn:'Автоматаар орчуулах',translating:'Орчуулж байна...',translationNote:'MyMemory API орчуулга',pdfPanel:'PDF урьдчилан харах',transPanel:'Орчуулга',noTranslation:'"Автоматаар орчуулах" дарна уу',allergenTitle:'Харшил үүсгэгчийг сонгох',allergenDesc:'Харшил үүсгэгчийг сонгоход цэсэнд тэмдэглэгдэнэ',clearAll:'Бүгдийг цэвэрлэх',selectAll:'Бүгдийг сонгох',todayTitle:'Өнөөдрийн үдийн хоол',monthlyTitle:'Сарын цэс',allergenWarn:'⚠ Харшлын анхааруулга',noMeal:'Хоол байхгүй',weekend:'Амралт',noAllergenTip:'Харшил үүсгэгчийг сонгоход цэс тэмдэглэгдэнэ',ingredientsTitle:'Өнөөдрийн харшлын мэдээлэл',days:['Ня','Да','Мя','Лх','Пү','Ба','Бя'],months:['1-р','2-р','3-р','4-р','5-р','6-р','7-р','8-р','9-р','10-р','11-р','12-р'],todayDate:'2026.05.22 Баасан'},
-  ru:{appTitle:'Информация для мультикультурных семей',appSubtitle:'Информация о школе на вашем языке',selectLanguage:'Выберите язык',selectSchool:'Выберите школу',placeholder:'-- Выбрать школу --',startBtn:'Начать',back:'← Назад',tabNewsletter:'📄 Информационный листок',tabMeal:'🍱 Меню обеда',uploadPdf:'Загрузить PDF',uploadDesc:'Перетащите PDF сюда или нажмите для выбора',sampleBtn:'Загрузить образец',translateBtn:'Авто-перевод',translating:'Переводим...',translationNote:'Перевод через MyMemory API',pdfPanel:'Просмотр PDF',transPanel:'Перевод',noTranslation:'Нажмите "Авто-перевод" для перевода',allergenTitle:'Выбрать аллергены',allergenDesc:'Выберите аллергены для отметки в меню',clearAll:'Сбросить всё',selectAll:'Выбрать всё',todayTitle:'Сегодняшний обед',monthlyTitle:'Ежемесячное меню',allergenWarn:'⚠ Аллерген',noMeal:'Нет питания',weekend:'Выходной',noAllergenTip:'Выберите аллергены для выделения меню',ingredientsTitle:'Информация об аллергенах сегодня',days:['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],months:['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],todayDate:'Пятница, 22 мая 2026'},
-  ja:{appTitle:'多文化学生・保護者情報',appSubtitle:'学校情報をあなたの言語で確認できます',selectLanguage:'言語を選択してください',selectSchool:'学校を選択してください',placeholder:'-- 学校を選ぶ --',startBtn:'始める',back:'← 戻る',tabNewsletter:'📄 家庭通信文',tabMeal:'🍱 給食メニュー',uploadPdf:'PDFをアップロード',uploadDesc:'PDFをドラッグ＆ドロップ、またはクリックして選択',sampleBtn:'サンプル通信文を読み込む',translateBtn:'自動翻訳',translating:'翻訳中...',translationNote:'MyMemory APIによる翻訳',pdfPanel:'PDFプレビュー',transPanel:'翻訳',noTranslation:'「自動翻訳」をクリックして翻訳してください',allergenTitle:'アレルゲンを選択',allergenDesc:'アレルゲンを選択するとメニューに表示されます',clearAll:'全て解除',selectAll:'全て選択',todayTitle:'今日の給食',monthlyTitle:'月間給食メニュー',allergenWarn:'⚠ アレルギー注意',noMeal:'給食なし',weekend:'週末',noAllergenTip:'アレルゲンを選択するとメニューが強調表示されます',ingredientsTitle:'今日のアレルゲン情報',days:['日','月','火','水','木','金','土'],months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],todayDate:'2026年5月22日（金）'},
+  ko:{appTitle:'다문화 학생·학부모 정보 소식',appSubtitle:'학교 생활 정보를 내 언어로 확인하세요',selectLanguage:'언어를 선택해주세요',selectSchool:'학교를 선택해주세요',placeholder:'-- 학교 선택 --',startBtn:'시작하기',back:'← 돌아가기',tabNewsletter:'📄 가정통신문',tabMeal:'🍱 급식 식단',uploadPdf:'PDF 파일 업로드',uploadDesc:'가정통신문 PDF를 여기에 끌어다 놓거나 클릭하여 선택하세요',sampleBtn:'샘플 가정통신문 불러오기',translateBtn:'자동 번역하기',translating:'번역 중...',translationNote:'MyMemory API 번역 (하루 5,000자 제한)',pdfPanel:'PDF 미리보기',transPanel:'번역본',noTranslation:'다른 언어 선택 후 "자동 번역하기"를 클릭하세요',summaryTitle:'📌 핵심 요약',allergenTitle:'알레르기 유발 식품 선택',allergenDesc:'해당하는 알레르기 항목을 선택하면 메뉴에 표시됩니다',clearAll:'전체 해제',selectAll:'전체 선택',todayTitle:'오늘의 급식',monthlyTitle:'월간 급식 메뉴',allergenWarn:'⚠ 알레르기 주의',noMeal:'급식 없음',weekend:'주말',noAllergenTip:'알레르기 항목을 선택하면 해당 메뉴가 표시됩니다',ingredientsTitle:'오늘 급식의 알레르기 정보',days:['일','월','화','수','목','금','토'],months:['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],todayDate:'2026년 5월 22일 금요일'},
+  en:{appTitle:'Multicultural Student & Parent Info',appSubtitle:'Access school information in your language',selectLanguage:'Select your language',selectSchool:'Select your school',placeholder:'-- Choose School --',startBtn:'Get Started',back:'← Back',tabNewsletter:'📄 Newsletter',tabMeal:'🍱 Lunch Menu',uploadPdf:'Upload PDF',uploadDesc:'Drag & drop a newsletter PDF here, or click to select',sampleBtn:'Load Sample Newsletter',translateBtn:'Auto Translate',translating:'Translating...',translationNote:'Powered by MyMemory API',pdfPanel:'PDF Preview',transPanel:'Translation',noTranslation:'Click "Auto Translate" to translate this document',summaryTitle:'📌 Key Points',allergenTitle:'Select Allergens',allergenDesc:'Select allergens to highlight matching menu items',clearAll:'Clear All',selectAll:'Select All',todayTitle:"Today's Lunch",monthlyTitle:'Monthly Lunch Menu',allergenWarn:'⚠ Allergen Alert',noMeal:'No meal',weekend:'Weekend',noAllergenTip:'Select allergens above to highlight menu items',ingredientsTitle:"Today's Allergen Info",days:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],months:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],todayDate:'Friday, May 22, 2026'},
+  zh:{appTitle:'多文化学生家长信息',appSubtitle:'用您的语言了解学校信息',selectLanguage:'请选择语言',selectSchool:'请选择学校',placeholder:'-- 选择学校 --',startBtn:'开始',back:'← 返回',tabNewsletter:'📄 家庭通知书',tabMeal:'🍱 午餐菜单',uploadPdf:'上传PDF',uploadDesc:'将PDF拖放到此处，或单击选择',sampleBtn:'加载示例通知',translateBtn:'自动翻译',translating:'翻译中...',translationNote:'由MyMemory API提供翻译',pdfPanel:'PDF预览',transPanel:'翻译',noTranslation:'点击"自动翻译"翻译此文件',summaryTitle:'📌 要点',allergenTitle:'选择过敏原',allergenDesc:'选择过敏原以在菜单中高亮显示',clearAll:'全部清除',selectAll:'全部选择',todayTitle:'今日午餐',monthlyTitle:'每月午餐菜单',allergenWarn:'⚠ 过敏警告',noMeal:'无午餐',weekend:'周末',noAllergenTip:'选择过敏原以高亮菜单项目',ingredientsTitle:'今日过敏原信息',days:['日','一','二','三','四','五','六'],months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],todayDate:'2026年5月22日 星期五'},
+  vi:{appTitle:'Thông tin học sinh & phụ huynh đa văn hóa',appSubtitle:'Xem thông tin trường học bằng ngôn ngữ của bạn',selectLanguage:'Chọn ngôn ngữ',selectSchool:'Chọn trường học',placeholder:'-- Chọn Trường --',startBtn:'Bắt đầu',back:'← Quay lại',tabNewsletter:'📄 Bản tin gia đình',tabMeal:'🍱 Thực đơn',uploadPdf:'Tải lên PDF',uploadDesc:'Kéo & thả PDF vào đây hoặc nhấp để chọn',sampleBtn:'Tải bản tin mẫu',translateBtn:'Dịch tự động',translating:'Đang dịch...',translationNote:'Dịch bởi MyMemory API',pdfPanel:'Xem trước PDF',transPanel:'Bản dịch',noTranslation:'Nhấp "Dịch tự động" để dịch tài liệu',summaryTitle:'📌 Điểm Chính',allergenTitle:'Chọn chất gây dị ứng',allergenDesc:'Chọn chất gây dị ứng để đánh dấu thực đơn',clearAll:'Xóa tất cả',selectAll:'Chọn tất cả',todayTitle:'Bữa trưa hôm nay',monthlyTitle:'Thực đơn hàng tháng',allergenWarn:'⚠ Cảnh báo dị ứng',noMeal:'Không có bữa ăn',weekend:'Cuối tuần',noAllergenTip:'Chọn chất gây dị ứng để đánh dấu thực đơn',ingredientsTitle:'Thông tin dị ứng hôm nay',days:['CN','T2','T3','T4','T5','T6','T7'],months:['Th.1','Th.2','Th.3','Th.4','Th.5','Th.6','Th.7','Th.8','Th.9','Th.10','Th.11','Th.12'],todayDate:'Thứ Sáu, 22/05/2026'},
+  fil:{appTitle:'Impormasyon para sa Multikulturang Mag-aaral',appSubtitle:'Impormasyon ng paaralan sa inyong wika',selectLanguage:'Pumili ng wika',selectSchool:'Pumili ng paaralan',placeholder:'-- Piliin ang Paaralan --',startBtn:'Magsimula',back:'← Bumalik',tabNewsletter:'📄 Balita ng Pamilya',tabMeal:'🍱 Menu ng Tanghalian',uploadPdf:'Mag-upload ng PDF',uploadDesc:'I-drag at i-drop ang PDF dito o i-click para pumili',sampleBtn:'I-load ang Sample',translateBtn:'Auto na Isalin',translating:'Nagsasalin...',translationNote:'Sinasalin ng MyMemory API',pdfPanel:'Preview ng PDF',transPanel:'Salin',noTranslation:'I-click ang "Auto na Isalin" para isalin',summaryTitle:'📌 Mga Pangunahing Punto',allergenTitle:'Pumili ng Allergen',allergenDesc:'Pumili ng allergen para i-highlight ang mga pagkain',clearAll:'I-clear Lahat',selectAll:'Piliin Lahat',todayTitle:'Tanghalian Ngayon',monthlyTitle:'Buwanang Menu',allergenWarn:'⚠ Babala sa Allergen',noMeal:'Walang pagkain',weekend:'Weekend',noAllergenTip:'Pumili ng allergen para i-highlight ang menu',ingredientsTitle:'Impormasyon ng Allergen Ngayon',days:['Lin','Lun','Mar','Miy','Huw','Biy','Sab'],months:['Ene','Peb','Mar','Abr','Mayo','Hun','Hul','Ago','Set','Okt','Nob','Dis'],todayDate:'Biyernes, Mayo 22, 2026'},
+  mn:{appTitle:'Олон соёлт сурагч, эцэг эхийн мэдээлэл',appSubtitle:'Сургуулийн мэдээллийг өөрийн хэлээр харах',selectLanguage:'Хэлийг сонгоно уу',selectSchool:'Сургуулийг сонгоно уу',placeholder:'-- Сургууль сонгох --',startBtn:'Эхлэх',back:'← Буцах',tabNewsletter:'📄 Гэрийн мэдэгдэл',tabMeal:'🍱 Үдийн хоол',uploadPdf:'PDF оруулах',uploadDesc:'PDF файлыг энд чирж оруулах эсвэл дарж сонгоно уу',sampleBtn:'Жишээ мэдэгдэл ачаалах',translateBtn:'Автоматаар орчуулах',translating:'Орчуулж байна...',translationNote:'MyMemory API орчуулга',pdfPanel:'PDF урьдчилан харах',transPanel:'Орчуулга',noTranslation:'"Автоматаар орчуулах" дарна уу',summaryTitle:'📌 Үндсэн заалтууд',allergenTitle:'Харшил үүсгэгчийг сонгох',allergenDesc:'Харшил үүсгэгчийг сонгоход цэсэнд тэмдэглэгдэнэ',clearAll:'Бүгдийг цэвэрлэх',selectAll:'Бүгдийг сонгох',todayTitle:'Өнөөдрийн үдийн хоол',monthlyTitle:'Сарын цэс',allergenWarn:'⚠ Харшлын анхааруулга',noMeal:'Хоол байхгүй',weekend:'Амралт',noAllergenTip:'Харшил үүсгэгчийг сонгоход цэс тэмдэглэгдэнэ',ingredientsTitle:'Өнөөдрийн харшлын мэдээлэл',days:['Ня','Да','Мя','Лх','Пү','Ба','Бя'],months:['1-р','2-р','3-р','4-р','5-р','6-р','7-р','8-р','9-р','10-р','11-р','12-р'],todayDate:'2026.05.22 Баасан'},
+  ru:{appTitle:'Информация для мультикультурных семей',appSubtitle:'Информация о школе на вашем языке',selectLanguage:'Выберите язык',selectSchool:'Выберите школу',placeholder:'-- Выбрать школу --',startBtn:'Начать',back:'← Назад',tabNewsletter:'📄 Информационный листок',tabMeal:'🍱 Меню обеда',uploadPdf:'Загрузить PDF',uploadDesc:'Перетащите PDF сюда или нажмите для выбора',sampleBtn:'Загрузить образец',translateBtn:'Авто-перевод',translating:'Переводим...',translationNote:'Перевод через MyMemory API',pdfPanel:'Просмотр PDF',transPanel:'Перевод',noTranslation:'Нажмите "Авто-перевод" для перевода',summaryTitle:'📌 Ключевые моменты',allergenTitle:'Выбрать аллергены',allergenDesc:'Выберите аллергены для отметки в меню',clearAll:'Сбросить всё',selectAll:'Выбрать всё',todayTitle:'Сегодняшний обед',monthlyTitle:'Ежемесячное меню',allergenWarn:'⚠ Аллерген',noMeal:'Нет питания',weekend:'Выходной',noAllergenTip:'Выберите аллергены для выделения меню',ingredientsTitle:'Информация об аллергенах сегодня',days:['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],months:['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'],todayDate:'Пятница, 22 мая 2026'},
+  ja:{appTitle:'多文化学生・保護者情報',appSubtitle:'学校情報をあなたの言語で確認できます',selectLanguage:'言語を選択してください',selectSchool:'学校を選択してください',placeholder:'-- 学校を選ぶ --',startBtn:'始める',back:'← 戻る',tabNewsletter:'📄 家庭通信文',tabMeal:'🍱 給食メニュー',uploadPdf:'PDFをアップロード',uploadDesc:'PDFをドラッグ＆ドロップ、またはクリックして選択',sampleBtn:'サンプル通信文を読み込む',translateBtn:'自動翻訳',translating:'翻訳中...',translationNote:'MyMemory APIによる翻訳',pdfPanel:'PDFプレビュー',transPanel:'翻訳',noTranslation:'「自動翻訳」をクリックして翻訳してください',summaryTitle:'📌 要点',allergenTitle:'アレルゲンを選択',allergenDesc:'アレルゲンを選択するとメニューに表示されます',clearAll:'全て解除',selectAll:'全て選択',todayTitle:'今日の給食',monthlyTitle:'月間給食メニュー',allergenWarn:'⚠ アレルギー注意',noMeal:'給食なし',weekend:'週末',noAllergenTip:'アレルゲンを選択するとメニューが強調表示されます',ingredientsTitle:'今日のアレルゲン情報',days:['日','月','火','水','木','金','土'],months:['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],todayDate:'2026年5月22日（金）'},
 };
 
 // ── EMOJI AUTO-MAPPING ───────────────────────────────────────────────
@@ -513,6 +519,36 @@ async function translate(text,targetLang){
   return parts.join('\n');
 }
 
+// 가정통신문 핵심 문장 추출 (한국어 원문 → 중요 문장 scoring)
+function extractKeySentences(text, maxCount=4){
+  const candidates=text
+    .replace(/\r/g,'')
+    .split(/(?<=[.!?。！？])\s+|\n+/)
+    .map(s=>s.replace(/^[\s\-•·◆▶○●]+/,'').trim())
+    .filter(s=>s.length>=10&&s.length<=200);
+  if(!candidates.length)return[];
+  if(candidates.length<=maxCount)return candidates;
+  const scored=candidates.map((s,i)=>{
+    let score=0;
+    if(/\d+월|\d+일|\d+시|\d+분/.test(s))score+=3;           // 날짜·시간
+    if(/제출|신청|접수|동의서|서명|제출일/.test(s))score+=3;   // 행동요청
+    if(/준비물|지참|가져|챙겨|준비/.test(s))score+=2;         // 준비물
+    if(/장소|강당|체육관|운동장|교실/.test(s))score+=2;       // 장소
+    if(/오전|오후|꼭|반드시|필수|중요|주의|유의/.test(s))score+=2; // 강조
+    if(/안내|공지|알림|드립니다|바랍니다/.test(s))score+=1;   // 안내
+    if(/학생|학부모|보호자|자녀|어린이/.test(s))score+=1;     // 대상
+    if(/전화|문의|연락|☎/.test(s))score+=1;                  // 연락처
+    if(i<3)score+=1;                                          // 초반 문장 가산
+    if(s.length>=20&&s.length<=100)score+=1;                  // 적정 길이
+    return{s,score,i};
+  });
+  return scored
+    .sort((a,b)=>b.score-a.score||a.i-b.i)
+    .slice(0,maxCount)
+    .sort((a,b)=>a.i-b.i)
+    .map(t=>t.s);
+}
+
 // ── COMPONENTS ─────────────────────────────────────────────────────────
 function SchoolSearch({schoolData,onSelect,apiKey}){
   const [query,setQuery]=useState('');
@@ -622,6 +658,8 @@ function NewsletterTab({lang}){
   const [translated,setTranslated]=useState('');
   const [loading,setLoading]=useState(false);
   const [dragOver,setDragOver]=useState(false);
+  const [summary,setSummary]=useState([]);
+  const [summaryOpen,setSummaryOpen]=useState(true);
   const fileRef=useRef();
 
   // pdfjs-dist를 CDN에서 동적으로 로드해 텍스트 추출
@@ -658,20 +696,37 @@ function NewsletterTab({lang}){
   const loadFile=async f=>{
     if(!f||f.type!=='application/pdf')return;
     setPdfUrl(URL.createObjectURL(f));
-    setIsSample(false);setTranslated('');
+    setIsSample(false);setTranslated('');setSummary([]);
     await extractPdfText(f);
   };
-  const loadSample=()=>{setIsSample(true);setPdfUrl(null);setPdfText('');setExtractErr('');setTranslated('');};
-  const reset=()=>{setPdfUrl(null);setPdfText('');setExtractErr('');setIsSample(false);setTranslated('');};
+  const loadSample=()=>{setIsSample(true);setPdfUrl(null);setPdfText('');setExtractErr('');setTranslated('');setSummary([]);};
+  const reset=()=>{setPdfUrl(null);setPdfText('');setExtractErr('');setIsSample(false);setTranslated('');setSummary([]);};
 
   const doTranslate=async()=>{
     if(!isSample&&!pdfUrl)return;
-    // 샘플이면 SAMPLE_TEXT, 실제 PDF면 추출된 텍스트 사용
     const source=isSample?SAMPLE_TEXT:pdfText;
     if(!source){setTranslated('번역할 텍스트가 없습니다. PDF에서 텍스트를 추출할 수 없었습니다.');return;}
-    setLoading(true);
-    try{const r=await translate(source,lang);setTranslated(r);}
-    catch{setTranslated('번역 오류가 발생했습니다.');}
+    setLoading(true);setSummary([]);
+    try{
+      // 1. 전체 번역
+      const r=await translate(source,lang);
+      setTranslated(r);
+      // 2. 핵심 문장 추출 후 번역
+      const keySents=extractKeySentences(source,4);
+      if(keySents.length>0){
+        if(lang==='ko'){
+          setSummary(keySents);
+        }else{
+          // ||| 구분자로 묶어 한 번에 번역
+          const joined=keySents.join(' ||| ');
+          try{
+            const t=await translate(joined,lang);
+            const parts=t.split(/\s*\|\|\|\s*/).map(s=>s.trim()).filter(Boolean);
+            setSummary(parts.length>=1?parts:keySents);
+          }catch{setSummary(keySents);}
+        }
+      }
+    }catch{setTranslated('번역 오류가 발생했습니다.');}
     setLoading(false);
   };
   const hasFile=pdfUrl||isSample;
@@ -706,6 +761,19 @@ function NewsletterTab({lang}){
         <button class="sample-btn" onClick=${()=>fileRef.current.click()}>+ ${tr.uploadPdf}</button>
         <input type="file" accept=".pdf" ref=${fileRef} onChange=${e=>loadFile(e.target.files[0])} style="display:none"/>
       </div>
+      ${summary.length>0&&html`
+        <div class="summary-card">
+          <div class="summary-header" onClick=${()=>setSummaryOpen(o=>!o)}>
+            <span>${tr.summaryTitle||'📌 핵심 요약'}</span>
+            <button class="summary-toggle" onClick=${e=>{e.stopPropagation();setSummaryOpen(o=>!o)}}>
+              ${summaryOpen?'▲':'▼'}
+            </button>
+          </div>
+          ${summaryOpen&&html`
+            <ul class="summary-list">
+              ${summary.map((s,i)=>html`<li key=${i}>${s}</li>`)}
+            </ul>`}
+        </div>`}
       <div class="newsletter-viewer">
         <div class="viewer-panel">
           <div class="viewer-panel-header">
